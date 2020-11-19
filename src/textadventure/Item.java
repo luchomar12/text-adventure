@@ -1,24 +1,17 @@
 package textadventure;
 public class Item {
     private int itemCode;
-    private int itemRoom;
     private String itemName;
     private String itemDescription;
     
     
-    public Item(int itemCode, int itemRoom, String itemName, String itemDescription){
-        this.itemCode = itemCode;
-        this.itemRoom = itemRoom;
+    public Item(String itemName, String itemDescription){
         this.itemName = itemName;
         this.itemDescription = itemDescription;
     }
     
     public int getItemCode(){
         return this.itemCode;
-    }
-    
-    public int getItemRoom(){
-        return this.itemRoom;
     }
         
     public String getItemName(){
@@ -34,5 +27,14 @@ public class Item {
         return this.itemName + ": " + this.itemDescription;
     }
     
+    @Override
+    public int hashCode(){
+        return this.itemCode;
+    }
     
+    @Override
+    public boolean equals(Object o){
+        Item i = (Item) o;
+        return this.itemCode == i.itemCode;
+    }
 }

@@ -1,22 +1,14 @@
 package textadventure;
-
-import java.util.Scanner;
+import java.util.*;
 
 public class Game {
-    public static Game juego;
     public Scanner in = new Scanner(System.in);
-    public Player p = Player.getInstance();
-
-    public Item i0 = new Item(0, 3, "Llave de Plata", "Una gran llave de plata. Puede ser de ayuda.");
-    public Item[] ir3 = new Item[1];
-
-    public Room r0 = new Room(0, 1, -1, -1, -1, "Armario", "Te encuentras en un amplio armario.", ir3);
-    public Room r1 = new Room(1, 2, 0, -1, -1, "Pasillo", "Un pasillo tenue, ves una puerta al final.", ir3);
-    public Room r2 = new Room(2, 7, 1, 5, 3, "Vestíbulo", "Un amplio vestíbulo con dos puertas a los costados.", ir3);
-    public Room r3 = new Room(3, -1, -1, 2, 4, "Garage", "Un garage, ves una llave en el piso.", ir3);
-    public Room[] rooms = new Room[]{r0,r1,r2,r3};
+    public static Game juego;
+    public static Player p = Player.getInstance();
+    public Set<Room> rooms = new HashSet<>();
+    public static Set<String> menu = new HashSet<>();
     
-    private Game(){}
+    public Game(){}
     
     public static Game getInstance(){
         if(juego == null){
@@ -24,40 +16,91 @@ public class Game {
         }
         return juego;
     }
+    
+    
+    //inicializando items, rooms, menu, etc    
+    public void init(){
+        //inicializo los items
+        Item llave = new Item("Lave de Plata", "Una pesada llave de plata. Parece abrir algo importante");
+        Item soga = new Item("Soga", "Una soga fina. Se podría atar a algo");
+        Item nota = new Item("Nota", "Una nota con unos números: 438");
+        Item tablero = new Item("Tablero", "Un tablero donde puedes ingresar números.");
+        
+        //inicializo las habitaciones
+        Room r1 = new Room();
+        Room r2 = new Room();
+        Room r3 = new Room();
+        Room r4 = new Room();
+        Room r5 = new Room(); //salida
 
-    public int moverse() {
-        while (true) {
-            System.out.println("¿Dónde quieres ir? ('n'/'s'/'e'/'w') / 'b' (volver al menú)");
-            int mover = in.next().charAt(0);
-            switch (mover) {
-                case 'b':
-                    return -2; //con -2 vuelvo al menú principal
-                case 'n':
-                    return rooms[p.getPlayerRoom()].getNorth();
-                case 's':
-                    return rooms[p.getPlayerRoom()].getSouth();
-                case 'e':
-                    return rooms[p.getPlayerRoom()].getEast();
-                case 'w':
-                    return rooms[p.getPlayerRoom()].getWest();
-                default:
-                    System.out.println("No es un lugar válido.");
-                    break; //no pudes ir allí.
-            }
-        }
-
+        //seteo las habitaciones
+        r1.setTitle("Armario");
+        r1.setDescription("Te encuentras en un amplio armario, hay una llave colgada");
+        r1.addItem(llave);
+        r1.addExit(new Exit("n", r2)); //salida al norte a room2
+        r2.setTitle("Pasillo");
+        r2.setDescription("Un tenue pasillo, ves una soga en el piso");
+        r2.addItem(soga);
+        r2.addExit(new Exit("s", r1)); //salida al sur a room1
+        r2.addExit(new Exit("e", r3)); //salida al este a room3
+        r3.setTitle("Sala");
+        r3.setDescription("Parece una sala de estar, hay una nota sobre la mesa");
+        r3.addItem(nota);
+        r3.addExit(new Exit("w", r2)); //salida al oeste a room2
+        r3.addExit(new Exit("s", r4)); //salida al sur a room4
+        r4.setTitle("Habitación");
+        r4.setDescription("Es una pequeña habitación, ves un tablero en la puerta de enfrente");
+        r4.addItem(tablero);
+        r4.addExit(new Exit("n", r3));  //salida al norte a room3
+        r4.addExit(new Exit("s", r5)); //salida al sur y gana juego
+        r5.setTitle("Salida!");
+        r5.setDescription("Bien hecho! has encontrado la salida!");
+        
+        //agrego las habitaciones al conjunto de rooms
+        rooms.add(r1);
+        rooms.add(r2);
+        rooms.add(r3);
+        rooms.add(r4);
+        rooms.add(r5);
+        
+        //agrego items del menu
+        menu.add("1. Moverse");
+        menu.add("2. Tomar item");
+        
+        //seteo la room inicial del jugador
+        p.setPlayerRoom(r1);
+        
     }
-
-    public void getInput(int option) {
-        int moverse = moverse();
-        switch (option) {
-            case 1:
-                p.moverA(moverse);
-                break;
-            case 2:
-                p.takeItem(i0);
-                break;
+    
+    
+    //=======================================================================
+    
+    //PARA COMENZAR EL JUEGO EN EL MAIN
+    
+    //muestro titulo del room y descripcion
+    public static void showRoom(){
+        System.out.println(p.getPlayerRoom().getTitle());
+        System.out.println(p.getPlayerRoom().getDescription());
+    }
+    
+    //muestro menu de acciones
+    public static void showMenu(){
+        for(String i : menu){
+            System.out.println(i);
         }
     }
-
+    
+    //interpreto la eleccion de accion y llamo a su correspondiente método
+    public void actionMenu (String in){
+        switch(in){
+            case "1":
+                p.moverPlayer();
+                break;
+            case "2":
+                //agarrar item,
+                break;
+            case "3":
+                //....
+        }
+    }
 }

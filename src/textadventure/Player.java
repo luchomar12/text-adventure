@@ -1,15 +1,13 @@
 package textadventure;
-public class Player {
+import java.util.*;
+public class Player{
     
+    public Scanner in = new Scanner(System.in);
     private static Player jugador;
-    private int room;
-    private Item [] inventory = new Item[10];
-    private int capacidad = 10;
-    private int cantidadItems = 0;
+    private Room playerRoom;
     
-    private Player(){
-        this.room = 0;
-    }
+    
+    public Player(){}
     
     public static Player getInstance(){
         if(jugador == null){
@@ -18,34 +16,28 @@ public class Player {
         return jugador;
     }
     
-    public int getPlayerRoom(){
-        return this.room;
+    public Room getPlayerRoom(){
+        return this.playerRoom;
     }
     
-    public boolean moverA(int destino){
-        if(destino != -1){
-            this.room = destino;
-            return true;
-        }else{
-            System.out.println("No puedes moverte allí");
-            return false;
-        }
+    public void setPlayerRoom(Room r){
+        this.playerRoom = r;
     }
     
-    public void takeItem(Item item){
-        if(cantidadItems<=capacidad){
-            inventory[cantidadItems] = item;
-            cantidadItems++;
-        }else{
-            System.out.println("No puedes llevar más items.");
-        }
-    }
-    
-    public void showItems(){
-        for (Item item : inventory) {
-            if(item != null){
-                System.out.println(item);
-            }
-        }
-    }
+    //metodo para moverse moverse
+    public void moverPlayer(){
+        boolean seMueve = false;
+        while(!seMueve){
+            System.out.println("Donde quieres ir? (n,s,e,w) o (b) para volver al menú.");            
+            String direction = in.nextLine();
+            if(direction.equals("b")){
+                //Game.showRoom();
+                break;
+            }else if(this.playerRoom.getExit(direction, this)){ //da true si hay salida, false si no hay
+                seMueve = true;//si hay salida salgo del bucle, sino vuelve a preguntar
+            }else{
+                System.out.println("No hay salida para esa dirección");    
+            }                    
+        }   
+    }    
 }

@@ -1,55 +1,70 @@
 package textadventure;
+
+import java.util.*;
+
 public class Room {
     
-    private int roomCode;
-    private int nCode;
-    private int sCode;
-    private int eCode;
-    private int wCode;
-    private String nombre;
+    private String title;
     private String description;
-    private Item [] inventory;
+    private Set<Item> items = new HashSet<>(); //creo un conjunto de items que estarán en cada habitación
+    private Set<Exit> exits = new HashSet<>();
+
+    public Set<Item> getItems() {
+        return items;
+    }
     
-    public Room(int room, int n, int s, int e, int w, String nombre, String description, Item[] inventory){
-        this.roomCode = room;
-        this.nCode = n;
-        this.sCode = s;
-        this.eCode = e;
-        this.wCode = w;
-        this.nombre = nombre;
+    public Room(){}
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
         this.description = description;
-        this.inventory = inventory;
     }
     
-    public int getRoom(){
-        return this.roomCode;
+    public void addItem(Item item){
+        items.add(item);
     }
     
-    public int getNorth(){
-        return this.nCode;
+    public void removeItem(Item item){
+        items.remove(item);
     }
     
-    public int getSouth(){
-        return this.sCode;
+    public void addExit(Exit exit){
+        exits.add(exit);
     }
     
-    public int getEast(){
-        return this.eCode;
+    public void removeExit(int exit){
+        exits.remove(exit);
+    }
+
+    public boolean getExit(String direccion, Player p) {
+        for(Exit i : exits){ //busco las salidas de esta room
+            if(i.getDirection().equals(direccion)){ //si hay salidas que coincidan con la entrada que hago por teclado (String exit)
+                p.setPlayerRoom(i.getLeadsTo()); //seteo el nuevo room
+                return true;
+            }   
+        }
+        return false;
     }
     
-    public int getWest(){
-        return this.wCode;
+    @Override
+    public int hashCode() {
+        return this.title.hashCode();
     }
-    
-    public String getNombre(){
-        return this.nombre;
-    }
-    
-    public String getDescription(){
-        return this.description;
-    }
-    
-    public Item [] getItems(){
-        return this.inventory;
+
+    @Override
+    public boolean equals(Object obj) {
+        Room r = (Room) obj;
+        return this.hashCode()==r.hashCode();
     }
 }
