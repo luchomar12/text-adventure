@@ -1,11 +1,12 @@
 package textadventure;
+import Items.Item;
 import java.util.*;
 public class Player{
     
     public Scanner in = new Scanner(System.in);
-    private static Player jugador;
+    public static Player jugador;
     private Room playerRoom;
-    private Set<Item> inventory = new HashSet<>();
+    public Set<Storable> inventory = new HashSet<>();
     
     
     private Player(){}
@@ -42,46 +43,50 @@ public class Player{
     }
     
     public void takeItem(){
-        if(this.playerRoom.getItems().isEmpty()){
-            System.out.println("No hay items para tomar");
+        if(this.playerRoom.getStorableItems().isEmpty()){
+            System.out.println("No hay items que puedas tomar");
         }else{
-            System.out.println("¿Qué item queres tomar?");
+            System.out.println("Puedes tomar los siguientes items, ¿cuál quieres? ");
+            for(Storable item : this.playerRoom.getStorableItems()){
+                System.out.println("    -"+item);
+            }
             String entry = in.nextLine();
-            for(Item i : this.playerRoom.getItems()){
-                if(entry.equalsIgnoreCase(i.getItemName())){
-                    System.out.println("Has tomado "+i.getItemName());
-                    inventory.add(i);
-                    this.playerRoom.removeItem(i);
+            for(Storable item : this.playerRoom.getStorableItems()){
+                Item it = (Item) item;
+                if(entry.equalsIgnoreCase(it.getItemName())){
+                    this.inventory.add((Storable) it);
+                    this.playerRoom.removeItem(it);
+                    System.out.println("Has tomado "+it.getItemName());
                 }else{
-                    System.out.println("No hay ningún item '"+entry+"'");
+                    System.out.println("No hay -"+entry+"- para tomar");
                 }
             }
         }
     }
     
+    public void removeItem(Storable item){
+        this.inventory.remove(item);
+    }
+    
     public void interactWith(){
-        List<Item> interactuables = new ArrayList<>();
-        for(Item item : this.playerRoom.getItems()){
-            if(item.isInteractuable()){
-                interactuables.add(item);
-            }
-        }
-        if(interactuables.isEmpty()){
-            System.out.println("No hay nada para interactuar");
+        if(this.playerRoom.getInteractuableItems().isEmpty()){
+            System.out.println("No hay nada con lo que interactuar");
         }else{
             System.out.println("¿Con qué quieres interactuar?");
-            for(Item item : interactuables){
-                System.out.println(item.getItemName());
+            for(Interactuable obj : this.playerRoom.getInteractuableItems()){
+                System.out.println("    -"+obj);
             }
             String entry = in.nextLine();
-            for(Item item : interactuables){
-                if(entry.equals(item.getItemName())){
+            for(Interactuable item : this.playerRoom.getInteractuableItems()){
+                Item it = (Item) item;
+                if(entry.equalsIgnoreCase(it.getItemName())){
                     item.interact();
+                    
+                }else{
+                    System.out.println("No hay -"+entry+"- para interactuar");
                 }
             }
-            
         }
-        
     }
     
     public void showInventory(){
@@ -89,7 +94,7 @@ public class Player{
             System.out.println("Aún no tienes nada en el inventario");
         }else{
             System.out.println("**INVENTARIO**");
-            for(Item item : inventory){
+            for(Storable item : inventory){
                 System.out.println("    -"+item);
             }
         }

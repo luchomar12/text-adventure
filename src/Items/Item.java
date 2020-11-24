@@ -1,15 +1,11 @@
-package textadventure;
-public class Item{
-    private String itemName;
-    private String itemDescription;
-    private boolean interactuable;
-    private String interaction;
+package Items;
+public abstract class Item{
+    protected String itemName;
+    protected String itemDescription;    
     
-    
-    public Item(String itemName, String itemDescription, boolean interactuable){
+    public Item(String itemName, String itemDescription){
         this.itemName = itemName;
         this.itemDescription = itemDescription;
-        this.interactuable = interactuable;
     }
         
     public String getItemName(){
@@ -18,20 +14,7 @@ public class Item{
             
     public String getItemDescription(){
         return this.itemDescription;
-    }
-    
-    public void setInteractuable(boolean i){
-        this.interactuable = i;
-    }
-    
-    public boolean isInteractuable(){
-        return this.interactuable;
-    }
-    
-    public void setInteraction(String interaction){
-        this.interaction = interaction;
-    }
-    
+    }    
     
     @Override
     public String toString(){

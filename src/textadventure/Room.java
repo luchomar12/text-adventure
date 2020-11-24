@@ -1,5 +1,6 @@
 package textadventure;
 
+import Items.Item;
 import java.util.*;
 
 public class Room {
@@ -11,8 +12,28 @@ public class Room {
 
     public Room(){}
     
-    public Set<Item> getItems() {
+    public Set<Item> getAllItems(){
         return items;
+    }
+    
+    public Set<Storable> getStorableItems() {
+        Set<Storable> storables = new HashSet<>();
+        for(Item item : items){
+            if(item instanceof Storable){
+                storables.add((Storable) item);
+            }
+        }
+        return storables;
+    }
+    
+    public Set<Interactuable> getInteractuableItems(){
+        Set<Interactuable> interacts = new HashSet<>();
+        for(Item item : items){
+            if(item instanceof Interactuable){
+                interacts.add((Interactuable) item);
+            }
+        }
+        return interacts;
     }
 
     public String getTitle() {
