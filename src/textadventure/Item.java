@@ -1,17 +1,15 @@
 package textadventure;
-public class Item {
-    private int itemCode;
+public class Item{
     private String itemName;
     private String itemDescription;
+    private boolean interactuable;
+    private String interaction;
     
     
-    public Item(String itemName, String itemDescription){
+    public Item(String itemName, String itemDescription, boolean interactuable){
         this.itemName = itemName;
         this.itemDescription = itemDescription;
-    }
-    
-    public int getItemCode(){
-        return this.itemCode;
+        this.interactuable = interactuable;
     }
         
     public String getItemName(){
@@ -22,6 +20,22 @@ public class Item {
         return this.itemDescription;
     }
     
+    public void setInteractuable(boolean i){
+        this.interactuable = i;
+    }
+    
+    public boolean isInteractuable(){
+        return this.interactuable;
+    }
+    
+    public void setInteraction(String interaction){
+        this.interaction = interaction;
+    }
+    
+    public void interact(){
+        System.out.println(this.interaction);
+    }
+    
     @Override
     public String toString(){
         return this.itemName + ": " + this.itemDescription;
@@ -29,12 +43,12 @@ public class Item {
     
     @Override
     public int hashCode(){
-        return this.itemCode;
+        return this.itemName.hashCode();
     }
     
     @Override
     public boolean equals(Object o){
         Item i = (Item) o;
-        return this.itemCode == i.itemCode;
+        return this.itemName.hashCode() == i.hashCode();
     }
 }

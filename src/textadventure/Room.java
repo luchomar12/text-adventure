@@ -9,11 +9,11 @@ public class Room {
     private Set<Item> items = new HashSet<>(); //creo un conjunto de items que estarán en cada habitación
     private Set<Exit> exits = new HashSet<>();
 
+    public Room(){}
+    
     public Set<Item> getItems() {
         return items;
     }
-    
-    public Room(){}
 
     public String getTitle() {
         return title;
@@ -43,7 +43,7 @@ public class Room {
         exits.add(exit);
     }
     
-    public void removeExit(int exit){
+    public void removeExit(Exit exit){
         exits.remove(exit);
     }
 
