@@ -32,9 +32,6 @@ public class Item{
         this.interaction = interaction;
     }
     
-    public void interact(){
-        System.out.println(this.interaction);
-    }
     
     @Override
     public String toString(){
