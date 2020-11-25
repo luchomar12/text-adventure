@@ -1,5 +1,7 @@
 package textadventure;
 
+import Interfaces.Storable;
+import Interfaces.Interactuable;
 import Items.Item;
 import java.util.*;
 
@@ -7,6 +9,7 @@ public class Room {
     
     private String title;
     private String description;
+    
     private Set<Item> items = new HashSet<>(); //creo un conjunto de items que estarán en cada habitación
     private Set<Exit> exits = new HashSet<>();
 
@@ -67,15 +70,18 @@ public class Room {
     public void removeExit(Exit exit){
         exits.remove(exit);
     }
-
-    public boolean getExit(String direccion, Player p) {
-        for(Exit i : exits){ //busco las salidas de esta room
-            if(i.getDirection().equals(direccion)){ //si hay salidas que coincidan con la entrada que hago por teclado (String exit)
-                p.setPlayerRoom(i.getLeadsTo()); //seteo el nuevo room
-                return true;
-            }   
+    
+    public Exit isExit(String direction){
+        for(Exit e : exits){
+            if(e.getDirection().equalsIgnoreCase(direction)){
+                return e;
+            }
         }
-        return false;
+        return null;
+    }
+
+    public Set<Exit> getExits() {
+        return exits;
     }
     
     @Override

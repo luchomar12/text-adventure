@@ -30,52 +30,83 @@ public class Game {
     }
 
     //INICIALIZO ITEMS, HABITACIONES, MENU, ETC 
-    public void init() {
-
-        //INICIALIZO ITEMS
-        Llave llave1 = new Llave("Llave de cobre", "Una pequeña llave de cobre, quizás abra algo...");
-        Llave llave2 = new Llave("Llave plateada", "Una pesada llave de plata. Parece abrir algo importante");
-        Cofre cofre = new Cofre("Cofre", "Un cofre mediano de madera, tiene una cerradura");
-        cofre.setOpener(llave2);
-        cofre.addTreasure(new Llave("Llave dorada", "Parece la mas importante de todas"));
-        
+    public static void init() {
 
         //INICIALIZO HABITACIONES
         Room r1 = new Room();
         Room r2 = new Room();
         Room r3 = new Room();
         Room r4 = new Room();
+        Room r5 = new Room();
+        Room r6 = new Room();
+        Room r7 = new Room();
+        Room r8 = new Room();                
         Room rs = new Room(); //salida
+
+        //LLAVES y UTILIZABLES
+        Llave llave1 = new Llave("Llave pequeña", "Una LLAVE PEQUEÑA, tirada en un rincón. Sólo entraría en pequeños cerrojos.",r1);
+        Llave llave2 = new Llave("Llave de cobre", "Una LLAVE DE COBRE, de tamaño chico",r2);
+        Llave destornillador = new Llave("Destornillador","Un destornillanor, puede ser útil",r2);
+        //Llave llave3 = new Llave("Llave plateada", "Una pesada LLAVE DE PLATA. Parece abrir algo importante");
+        
+        //INICIALIZO LAS SALIDAS
+        Exit exit1 = new Exit("n", r2,false); //salida cerrada hacia room2
+        exit1.setClosedDescription("La puerta del armario no parece ceder, tampoco tiene cerrojo...\nTiene que haber alguna forma de abrirla");
+        Exit exit2 = new Exit("n", r3,false); //salida cerrada hacia room3
+        exit2.setClosedDescription("La puerta está cerrada. Tene una placa de metal atornillada tapando el cerrojo.\nNo puedo introducir ninguna llave así.");
+        PlacaMetalica placa = new PlacaMetalica("Placa metálica", "Una PLACA METALICA. Tiene 4 tornillos. Creo que puedo desatornillarla con algo", r2, destornillador);
+        exit2.setInteractuable(placa);
+        placa.setPlace(exit2);
+        
+        
+        //NOTAS
+        Nota nota1 = new Nota("Nota", "Es una nota... ¿o poema?... Creo que llego a leerlo... ¿está en clave?",r2);
+        
+        //COFRES
+        Cofre cofre1 = new Cofre("Cofre Chico", "Un COFRE CHICO de madera, tiene una pequeña cerradura",r2);
+        cofre1.setOpener(llave1);
+        cofre1.addTreasure(llave2);
+        cofre1.addTreasure(nota1);
+        cofre1.addTreasure(destornillador);
+        
+        //OTROS
+        Palanca palanca = new Palanca("Palanca", "Una PALANCA de madera incrustada en la pared. ¿Accionará algo?",r1, exit1); //está en r1 y habilita la exit1
+        
+        
+
 
         //SETEO LAS HABITACIONES
         //Room 1
         r1.setTitle("Armario");
-        r1.setDescription("Te encuentras en un amplio armario");
-        r1.addItem(llave2);
-        r1.addItem(cofre);
-        r1.addExit(new Exit("n", r2)); //salida al norte a room2
+        r1.setDescription("Te encuentras en un amplio armario.\nDe todas maneras sientes la asfixia y las paredes parecen encerrarte cada vez mas.\nParece sólo haber una puerta al frente... ¿estará abierta?");
+        r1.addItem(llave1);
+        r1.addItem(palanca);
+        r1.addExit(exit1); //salida al norte a room2
 
         //Room 2
         r2.setTitle("Pasillo");
-        r2.setDescription("Un tenue pasillo, ves una soga en el piso");
-        //r2.addItem(soga);
-        r2.addItem(cofre);
-        r2.addExit(new Exit("s", r1)); //salida al sur a room1
-        r2.addExit(new Exit("e", r3)); //salida al este a room3
+        r2.setDescription("Estás en un tenue pasillo. Entran tres delgados rayos de luz desde unas finas aberturas en lo alto de las paredes.\n"
+                + "Al costado hay una mesa con una pequeña cajita. Al fondo una puerta.");
+        r2.addItem(cofre1);
+        r2.addExit(new Exit("s", r1,true)); //salida al sur a room1 (ya abierta)
+        r2.addExit(exit2); //salida al norte a room3
 
         //Room 3
         r3.setTitle("Sala");
-        r3.setDescription("Parece una sala de estar, hay una nota sobre la mesa y además un cofre en una esquina");
-        //r3.addItem(nota);
-        r3.addExit(new Exit("w", r2)); //salida al oeste a room2
-        r3.addExit(new Exit("s", r4)); //salida al sur a room4
+        r3.setDescription("Parece una sala de estar");
+        //r3.addItem(palanca);
+        r3.addExit(new Exit("w", r2,true)); //salida al oeste a room2
+        r3.addExit(new Exit("s", r4,false)); //salida al sur a room4/cerrada
 
         //Room 4
         r4.setTitle("Habitación");
-        r4.setDescription("Es una pequeña habitación, ves un tablero en la puerta de enfrente");
+        r4.setDescription("Es una pequeña habitación, ves un TABLERO en la puerta de enfrente");
         //r4.addItem(tablero);
-        r4.addExit(new Exit("n", r3));  //salida al norte a room3
-        r4.addExit(new Exit("s", rs)); //salida al sur y gana juego
+        r4.addExit(new Exit("n", r3,true));  //salida al norte a room3
+        Exit puertaCerrada = new Exit("s", rs,false);
+        puertaCerrada.setClosedDescription("Una gran puerta de metal. Está cerrada y no tiene cerrojos ni picaporte.");
+        puertaCerrada.setOpenedDescription("La puerta está abierta de par en par");
+        r4.addExit(puertaCerrada); //salida al sur y gana juego
 
         //Room 5
         rs.setTitle("Salida!");
@@ -106,13 +137,15 @@ public class Game {
     public static void showRoom() {
         System.out.println("========================================================");
         System.out.println(p.getPlayerRoom().getTitle()); //muestra el titulo de la habitación actual del jugador
+        System.out.println("========================================================");
         System.out.println(p.getPlayerRoom().getDescription()); //muestro la descripcion de la habitación actual del jugador
         if (p.getPlayerRoom().getAllItems().isEmpty()) { //Muestro los objetos de la habitación, si los hay
-            System.out.println("Ya no hay nada importante en esta habitación");
+            System.out.println("");
+            System.out.println(">>Ya no queda nada importante en esta habitación");
         } else {
-            System.out.println("En la habitación encuentras los siguientes objetos: ");
+            System.out.println("Puedes ver... ");
             for (Item item : p.getPlayerRoom().getAllItems()) {
-                System.out.println("    -" + item);
+                System.out.println("    -" + item.getItemDescription());
             }
         }
     }
@@ -141,12 +174,13 @@ public class Game {
                 in.nextLine();
                 break;
             case "3":
-                p.interactWith();
+                System.out.println("¿Inventario(i) o habitación(h)?");
+                String option = in.nextLine();
+                p.interactWith(option);
                 in.nextLine();
                 break;
             case "4":
                 p.showInventory();
-                in.nextLine();
                 break;
             case "":
                 System.out.println("Debes introducir una acción!");

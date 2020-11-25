@@ -1,11 +1,24 @@
 package Items;
+
+import textadventure.*;
+
 public abstract class Item{
     protected String itemName;
-    protected String itemDescription;    
+    protected String itemDescription;
+    protected Room itemRoom;
     
-    public Item(String itemName, String itemDescription){
+    public Item(String itemName, String itemDescription, Room itemRoom){
         this.itemName = itemName;
         this.itemDescription = itemDescription;
+        this.itemRoom = itemRoom;
+    }
+
+    public Room getItemRoom() {
+        return itemRoom;
+    }
+
+    public void setItemRoom(Room itemRoom) {
+        this.itemRoom = itemRoom;
     }
         
     public String getItemName(){

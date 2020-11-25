@@ -1,17 +1,21 @@
 package Items;
+import Interfaces.Abrible;
+import Interfaces.Storable;
+import Interfaces.Usable;
+import Interfaces.Interactuable;
 import java.util.*;
 import textadventure.*;
 import static textadventure.Game.in;
 import static textadventure.Player.jugador;
 
-public class Cofre extends Item implements Interactuable{
+public class Cofre extends Item implements Interactuable, Abrible{
     
     private Usable opener;
     private boolean opened;
     private Set<Storable> treasures = new HashSet<>();
     
-    public Cofre(String name, String description){
-        super(name, description);
+    public Cofre(String name, String description, Room itemRoom){
+        super(name, description, itemRoom);
         this.opened = false;
     }
     
@@ -33,7 +37,9 @@ public class Cofre extends Item implements Interactuable{
             }else{
                 System.out.println("¿Qué vas a usar?");
                 System.out.println("");
-                Game.p.showInventory();
+                for(Storable i : Game.p.inventory){
+                    System.out.println(i);
+                }
                 System.out.print("> ");
                 String entry = in.nextLine();
                 for(Storable item : Game.p.inventory){ //busco en el inventario
@@ -41,6 +47,7 @@ public class Cofre extends Item implements Interactuable{
                     if(entry.equalsIgnoreCase(obj.getItemName())){ //si mi entrada es igual al nombre del item
                         Usable llave = (Usable) obj;
                         this.open(llave);
+                        break;
                     }else{
                         System.out.println("No puedes usar -"+entry+"-");
                     }
@@ -63,9 +70,9 @@ public class Cofre extends Item implements Interactuable{
                 Game.p.inventory.add(treasure);
             }
             Item llave = (Item) this.opener;
-            System.out.println("-----");
-            System.out.println("(Descartas la -"+llave.getItemName()+"- porque ya no la necesitas)");
-            Game.p.removeItem((Storable) llave);
+            Game.p.getPlayerRoom().removeItem(this); //saco el cofre de la habitación porque ya no lo necesito
+            //System.out.println("(Descartas la -"+llave.getItemName()+"- porque ya no la necesitas)");
+            //Game.p.removeItem((Storable) llave);
         }else{
             System.out.println("No es la llave correcta");
         }

@@ -1,4 +1,4 @@
-package textadventure;
+package Interfaces;
 public interface Storable {
     
     
