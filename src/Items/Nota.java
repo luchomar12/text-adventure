@@ -7,17 +7,24 @@ import Interfaces.Storable;
 
 public class Nota extends Item implements Interactuable, Storable{
 
-    static private Scanner in;
+    public Scanner in = new Scanner(System.in);
+    private String nota;
+    
     public Nota(String itemName, String itemDescription, Room itemRoom) {
         super(itemName, itemDescription, itemRoom);
+    }
+    
+    public void setNota(String nota){
+        this.nota = nota;
+    }
+    
+    public String getNota(){
+        return this.nota;
     }
 
     @Override
     public void interact() {
-        System.out.println("\"La poca luz que entra en mi\nCasi a tientas te dejó\nSin cuenta lo contó\nY del pasillo se salió\"");
-        System.out.println("...");
-        in.nextLine();
-        System.out.println("Están remarcados el primer y el tercer párrafo...");
+        System.out.println(this.getNota());
     }
     
 }

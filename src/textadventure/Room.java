@@ -1,42 +1,52 @@
 package textadventure;
 
+import Items.Exit;
 import Interfaces.Storable;
 import Interfaces.Interactuable;
 import Items.Item;
 import java.util.*;
 
 public class Room {
-    
+
     private String title;
     private String description;
-    
-    private Set<Item> items = new HashSet<>(); //creo un conjunto de items que estarán en cada habitación
-    private Set<Exit> exits = new HashSet<>();
+    private Set<Item> items = new HashSet<>(); //creo conjunto de todos los items de la habitación
+    private Set<Interactuable> interactuableItems = new HashSet<>(); // items itneractuables
+    private Set<Exit> exits = new HashSet<>(); //salidas
+    private boolean dark; //si está o no iluminada la habitación
 
-    public Room(){}
-    
-    public Set<Item> getAllItems(){
+    public Room() {
+    }
+
+    public Set<Item> getAllItems() {
         return items;
     }
-    
+
     public Set<Storable> getStorableItems() {
         Set<Storable> storables = new HashSet<>();
-        for(Item item : items){
-            if(item instanceof Storable){
+        for (Item item : items) {
+            if (item instanceof Storable) {
                 storables.add((Storable) item);
             }
         }
         return storables;
     }
-    
-    public Set<Interactuable> getInteractuableItems(){
-        Set<Interactuable> interacts = new HashSet<>();
-        for(Item item : items){
-            if(item instanceof Interactuable){
-                interacts.add((Interactuable) item);
+
+    public Set<Interactuable> getInteractuableItems() {
+        for (Item item : items) {
+            if (item instanceof Interactuable) {
+                interactuableItems.add((Interactuable) item);
             }
         }
-        return interacts;
+        return interactuableItems;
+    }
+    
+    public void addInteractuableItem(Interactuable item){
+        this.interactuableItems.add(item);
+    }
+    
+    public void removeInteractuableItem(Interactuable item){
+        this.interactuableItems.remove(item);
     }
 
     public String getTitle() {
@@ -50,30 +60,30 @@ public class Room {
     public String getDescription() {
         return description;
     }
-    
+
     public void setDescription(String description) {
         this.description = description;
     }
-    
-    public void addItem(Item item){
+
+    public void addItem(Item item) {
         items.add(item);
     }
-    
-    public void removeItem(Item item){
+
+    public void removeItem(Item item) {
         items.remove(item);
     }
-    
-    public void addExit(Exit exit){
+
+    public void addExit(Exit exit) {
         exits.add(exit);
     }
-    
-    public void removeExit(Exit exit){
+
+    public void removeExit(Exit exit) {
         exits.remove(exit);
     }
-    
-    public Exit isExit(String direction){
-        for(Exit e : exits){
-            if(e.getDirection().equalsIgnoreCase(direction)){
+
+    public Exit isExit(String direction) {
+        for (Exit e : exits) {
+            if (e.getDirection().equalsIgnoreCase(direction)) {
                 return e;
             }
         }
@@ -84,6 +94,14 @@ public class Room {
         return exits;
     }
     
+    public void setDark(boolean dark){
+        this.dark = dark;
+    }
+    
+    public boolean isDark(){
+        return this.dark;
+    }
+
     @Override
     public int hashCode() {
         return this.title.hashCode();
@@ -92,6 +110,6 @@ public class Room {
     @Override
     public boolean equals(Object obj) {
         Room r = (Room) obj;
-        return this.hashCode()==r.hashCode();
+        return this.hashCode() == r.hashCode();
     }
 }

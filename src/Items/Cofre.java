@@ -1,4 +1,5 @@
 package Items;
+
 import Interfaces.Abrible;
 import Interfaces.Storable;
 import Interfaces.Usable;
@@ -6,75 +7,82 @@ import Interfaces.Interactuable;
 import java.util.*;
 import textadventure.*;
 import static textadventure.Game.in;
-import static textadventure.Player.jugador;
 
-public class Cofre extends Item implements Interactuable, Abrible{
-    
-    private Usable opener;
-    private boolean opened;
-    private Set<Storable> treasures = new HashSet<>();
-    
-    public Cofre(String name, String description, Room itemRoom){
+public class Cofre extends Item implements Interactuable, Abrible {
+
+    //Los cofres estarán cerrados siempre hasta que un Usable los abra
+    private Usable opener; //el item Usable que lo abre
+    private Set<Storable> treasures = new HashSet<>(); //items dentro del cofre
+
+    public Cofre(String name, String description, Room itemRoom) {
         super(name, description, itemRoom);
-        this.opened = false;
     }
-    
-    public void setOpener(Usable item){
+
+    public void setOpener(Usable item) {
         this.opener = item;
     }
-    
-    public void addTreasure(Storable item){
+
+    public Usable getOpener() {
+        return this.opener;
+    }
+
+    public void getTreasures() {
+        for (Storable treasure : treasures) {
+            System.out.println("    -" + treasure);
+            Game.p.inventory.add(treasure);
+        }
+    }
+
+    public void addTreasure(Storable item) {
         treasures.add(item);
     }
-    
-    
+
+    public void removeTreasure(Storable item) {
+        treasures.remove(item);
+    }
+
     @Override
-    public void interact(){
-        if(!this.opened){
-            System.out.println("Para abrirlo debes usar una llave");
-            if(Game.p.inventory.isEmpty()){
-                System.out.println("No tienes nada pasa usar");
-            }else{
-                System.out.println("¿Qué vas a usar?");
-                System.out.println("");
-                for(Storable i : Game.p.inventory){
-                    System.out.println(i);
-                }
-                System.out.print("> ");
-                String entry = in.nextLine();
-                for(Storable item : Game.p.inventory){ //busco en el inventario
-                    Item obj = (Item) item; //guardo en Item el Storable
-                    if(entry.equalsIgnoreCase(obj.getItemName())){ //si mi entrada es igual al nombre del item
-                        Usable llave = (Usable) obj;
-                        this.open(llave);
-                        break;
-                    }else{
-                        System.out.println("No puedes usar -"+entry+"-");
-                    }
-                }
+    public void interact() {
+        System.out.println("Para abrirlo debes usar una llave");
+        System.out.println("");
+        if (Game.p.inventory.isEmpty()) {
+            System.out.println("No tienes nada pasa usar");
+        } else {
+            System.out.println("¿Qué vas a usar?");
+            System.out.println("");
+            Game.p.showInventory();
+            System.out.println("");
+            System.out.print("> ");
+            String input = in.nextLine();
+            if (!this.validateInteract(input)) {
+                System.out.println("No puedes usar -" + input + "-");
             }
-        }else{
-            System.out.println("Este cofre ya fue abierto, no hay nada en él");
         }
     }
-    
+
+    public boolean validateInteract(String input) {
+        for (Storable item : Game.p.inventory) { //busco en el inventario
+            Item obj = (Item) item; //guardo en Item el Storable
+            if (input.equalsIgnoreCase(obj.getItemName())) { //si mi entrada es igual al nombre del item
+                Usable llave = (Usable) obj;
+                return this.openWith(llave);
+            }
+        }
+        return false;
+    }
+
     @Override
-    public void open(Usable item){
-        if(item.equals(opener)){
+    public boolean openWith(Usable item) {
+        if (item.equals(opener)) {
+            System.out.println("");
             System.out.println(">> ¡Abriste el cofre! <<");
-            this.opened = true;
             System.out.println("");
             System.out.println("Encuentras y guardas: ");
-            for(Storable treasure : treasures){
-                System.out.println("    -"+treasure);
-                Game.p.inventory.add(treasure);
-            }
-            Item llave = (Item) this.opener;
-            Game.p.getPlayerRoom().removeItem(this); //saco el cofre de la habitación porque ya no lo necesito
-            //System.out.println("(Descartas la -"+llave.getItemName()+"- porque ya no la necesitas)");
-            //Game.p.removeItem((Storable) llave);
-        }else{
-            System.out.println("No es la llave correcta");
+            this.getTreasures();
+            Game.p.getPlayerRoom().removeItem((Item) this);
+            Game.p.getPlayerRoom().removeInteractuableItem(this); //saco el cofre de la habitación porque ya no lo necesito
+            return true;
         }
-    }    
+        return false;
+    }
 }
