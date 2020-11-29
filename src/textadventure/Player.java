@@ -53,7 +53,8 @@ public class Player {
                     if (salida.getInteractuable() != null) { //si la salida requere interactuar con algún interactuable para abrirla/desbloquearla
                         Item s = (Item) salida.getInteractuable();
                         this.playerRoom.addItem(s); //agrego el interactuable a la lista de items visibles en la room
-                        System.out.println(s.getItemDescription());
+                        //System.out.println(s.getItemDescription()); //muestro la descripcion del interactuable
+                        salida.getInteractuable().interact();
                         in.nextLine();
                         break;
                     } else {
@@ -105,7 +106,7 @@ public class Player {
             System.out.println("No hay ningún objeto con el que puedas interactuar");
         } else {
             System.out.println("¿Con qué objeto quieres interactuar?");
-            this.showAllInteractuableItems(interact); //muestro los items interactuables del inventario
+            this.showAllInteractuableItems(interact); //muestro los items interactuables del inventario/room
             System.out.println("");
             System.out.print("> ");
             String input = in.nextLine();
@@ -156,6 +157,9 @@ public class Player {
             if (input.equalsIgnoreCase(it.getItemName())) {
                 this.inventory.add((Storable) it);
                 this.playerRoom.removeItem(it);
+                if (it instanceof Interactuable) {
+                    this.playerRoom.removeInteractuableItem((Interactuable) it);
+                }
                 System.out.println("Has tomado " + it.getItemName());
                 return true;
             }
@@ -180,12 +184,12 @@ public class Player {
         }
         return false;
     }
-    
-    public void choose(){
+
+    public void choose() {
         System.out.println("Entras a la habitación pero...");
         System.out.println("***NO PUEDO VER NADA***");
         System.out.println("***EL INTERRUPTOR DEBE ESTAR CERCA...***");
-        
+
         for (Interactuable item : this.playerRoom.getInteractuableItems()) {
             if (item instanceof Palanca) {
                 item.interact();
@@ -195,6 +199,4 @@ public class Player {
         }
     }
 
-    public void searchSwitch() {
-    }
 }

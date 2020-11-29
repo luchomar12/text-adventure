@@ -122,6 +122,7 @@ public class Exit extends Item implements Interactuable, Abrible {
                 return this.openWith(llave);
             }
         }
+        System.out.println("No paso el validate");
         return false;
     }
 
@@ -141,6 +142,7 @@ public class Exit extends Item implements Interactuable, Abrible {
             System.out.println("");
             return true;
         } else {
+            System.out.println("No paso el openwith");
             return false;
         }
     }

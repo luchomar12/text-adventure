@@ -14,6 +14,26 @@ public class Cofre extends Item implements Interactuable, Abrible {
     private Usable opener; //el item Usable que lo abre
     private Set<Storable> treasures = new HashSet<>(); //items dentro del cofre
 
+    private boolean isOpened = false;
+    private Interactuable interactuable;
+    private boolean isBlocked;
+
+    public Interactuable getInteractuable() {
+        return interactuable;
+    }
+
+    public void setInteractuable(Interactuable interactuable) {
+        this.interactuable = interactuable;
+    }
+
+    public boolean isIsBlocked() {
+        return isBlocked;
+    }
+
+    public void setIsBlocked(boolean isBlocked) {
+        this.isBlocked = isBlocked;
+    }
+
     public Cofre(String name, String description, Room itemRoom) {
         super(name, description, itemRoom);
     }
@@ -41,21 +61,43 @@ public class Cofre extends Item implements Interactuable, Abrible {
         treasures.remove(item);
     }
 
+    public void setIsOpened(boolean isOpened) {
+        this.isOpened = isOpened;
+    }
+
+    public boolean getIsOpened() {
+        return isOpened;
+    }
+
     @Override
     public void interact() {
-        System.out.println("Para abrirlo debes usar una llave");
-        System.out.println("");
-        if (Game.p.inventory.isEmpty()) {
-            System.out.println("No tienes nada pasa usar");
+        if (this.isOpened) {
+            System.out.println("");
+            System.out.println("Encuentras y guardas: ");
+            this.getTreasures();
+            Game.p.getPlayerRoom().removeItem((Item) this);
+            Game.p.getPlayerRoom().removeInteractuableItem(this);
         } else {
-            System.out.println("¿Qué vas a usar?");
-            System.out.println("");
-            Game.p.showInventory();
-            System.out.println("");
-            System.out.print("> ");
-            String input = in.nextLine();
-            if (!this.validateInteract(input)) {
-                System.out.println("No puedes usar -" + input + "-");
+            if (this.getInteractuable() != null) { //si TIENE un interactuable
+                Item i = (Item) this.getInteractuable();
+                System.out.println("Tiene un " + i.getItemName());
+                this.getInteractuable().interact();
+            } else { // si NO tiene interactuable tiene llave
+                System.out.println("Para abrirlo debes usar una llave");
+                System.out.println("");
+                if (Game.p.inventory.isEmpty()) {
+                    System.out.println("No tienes nada pasa usar");
+                } else {
+                    System.out.println("¿Qué vas a usar?");
+                    System.out.println("");
+                    Game.p.showInventory();
+                    System.out.println("");
+                    System.out.print("> ");
+                    String input = in.nextLine();
+                    if (!this.validateInteract(input)) {
+                        System.out.println("No puedes usar -" + input + "-");
+                    }
+                }
             }
         }
     }
@@ -74,8 +116,9 @@ public class Cofre extends Item implements Interactuable, Abrible {
     @Override
     public boolean openWith(Usable item) {
         if (item.equals(opener)) {
+            this.isOpened = true;
             System.out.println("");
-            System.out.println(">> ¡Abriste el cofre! <<");
+            System.out.println(">> ¡Lo abriste! <<");
             System.out.println("");
             System.out.println("Encuentras y guardas: ");
             this.getTreasures();
