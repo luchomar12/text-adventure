@@ -1,17 +1,14 @@
 package Items;
 
-import java.util.*;
 import Interfaces.Interactuable;
-import textadventure.Room;
 import Interfaces.Storable;
 
 public class Nota extends Item implements Interactuable, Storable{
 
-    public Scanner in = new Scanner(System.in);
     private String nota;
     
-    public Nota(String itemName, String itemDescription, Room itemRoom) {
-        super(itemName, itemDescription, itemRoom);
+    public Nota(int code, String itemName, String itemDescription) {
+        super(code, itemName, itemDescription);
     }
     
     public void setNota(String nota){
@@ -20,11 +17,16 @@ public class Nota extends Item implements Interactuable, Storable{
     
     public String getNota(){
         return this.nota;
-    }
+    } 
 
     @Override
     public void interact() {
         System.out.println(this.getNota());
     }
-    
+
+    @Override
+    public boolean validateInteract(String input) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

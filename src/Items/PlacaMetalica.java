@@ -3,32 +3,34 @@ package Items;
 import Interfaces.Interactuable;
 import Interfaces.Storable;
 import Interfaces.Usable;
-import java.util.Scanner;
 import textadventure.Game;
 import static textadventure.Game.in;
-import textadventure.Room;
 
 public class PlacaMetalica extends Item implements Interactuable {
 
-    static private Scanner in = new Scanner(System.in);
-    private Llave opener;
-    private Exit place;
+    //ATRIBUTOS
+    private Llave opener; //en estos casos sería el destornillador que es de tipo Llave
+    private Item isOn;
 
-    public PlacaMetalica(String itemName, String itemDescription, Room itemRoom, Llave opener) {
-        super(itemName, itemDescription, itemRoom);
+    //CONSTRUCTOR
+    public PlacaMetalica(int code, String itemName, String itemDescription, Llave opener) {
+        super(code, itemName, itemDescription);
         this.opener = opener;
     }
 
-    public void setPlace(Exit exit) {
-        this.place = exit;
+    
+    public void setIsOn(Item item) {
+        this.isOn = item;
     }
-
+    
     @Override
     public void interact() {
-        if (Game.p.inventory.isEmpty()) {
+        System.out.println(this.itemDescription); //muestro la descripcion de la placa
+        if (Game.p.inventory.isEmpty()) { //si no tengo nada para abrirlo
+            System.out.println("");
             System.out.println("No tienes nada pasa usar");
         } else {
-            System.out.println("");
+            in.nextLine();
             System.out.println("¿Qué vas a usar?");
             System.out.println("");
             Game.p.showInventory();
@@ -36,26 +38,35 @@ public class PlacaMetalica extends Item implements Interactuable {
             System.out.print("> ");
             String input = in.nextLine();
             if (!this.validateInteract(input)) {
-                System.out.println("No puedes usar \"" + input + "\" aquí...");
+                if (input.equals("")) {
+                    System.out.println("No has hecho nada...");
+                } else {
+                    System.out.println("No es el item correcto...");
+                }
             }
         }
     }
 
+    @Override
     public boolean validateInteract(String input) {
         for (Storable item : Game.p.inventory) { //busco en el inventario
             Item i = (Item) item; //guardo en Item el Storable
             if (input.equalsIgnoreCase(i.getItemName())) { //si mi entrada es igual al nombre del item
-                if (opener.equals((Llave) i)) {
-                    System.out.println("¡Has desatornillado la placa!");
-                    Game.p.getPlayerRoom().removeItem(this); //borro la placa
-                    Game.p.getPlayerRoom().removeInteractuableItem(this); //borro la placa
-                    Game.p.getPlayerRoom().addItem((Item) this.place); //agrego el exit interactuable para que se vea
-                    this.place.setInteractuable(null);
-                    this.place.setIsBlocked(false);
-                    this.place.setIsInteractuable(true);
-                    return true;
-                } else {
-                    return false;
+                if(i instanceof Usable){ //si lo que elijo es un usable
+                    if (opener.equals((Usable) i)) {
+                        System.out.println("¡Has desatornillado la placa!");
+                        Game.p.getPlayerRoom().removeItem(this); //borro la placa
+                        if (this.isOn instanceof Exit) {
+                            Exit e = (Exit)this.isOn;
+                            e.setInteractuable(null); //saco la placa de la Exit
+                        }
+                        if(this.isOn instanceof Cofre){
+                            Cofre c = (Cofre)this.isOn;
+                            c.setInteractuable(null); //saco la placa del Cofre
+                            c.open();
+                        }
+                        return true;
+                    }
                 }
             }
         }

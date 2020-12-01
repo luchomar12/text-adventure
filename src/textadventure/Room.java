@@ -5,23 +5,31 @@ import Interfaces.Storable;
 import Interfaces.Interactuable;
 import Items.Item;
 import java.util.*;
+import org.json.simple.JSONObject;
 
 public class Room {
 
+    private int roomCode;
     private String title;
     private String description;
     private Set<Item> items = new HashSet<>(); //creo conjunto de todos los items de la habitación
-    private Set<Interactuable> interactuableItems = new HashSet<>(); // items itneractuables
     private Set<Exit> exits = new HashSet<>(); //salidas
     private boolean dark; //si está o no iluminada la habitación
 
+    //CONSTRUCTOR
     public Room() {
+        
+    }
+    
+    //CODE
+    public int getRoomCode(){
+        return this.roomCode;
     }
 
     public Set<Item> getAllItems() {
         return items;
     }
-
+    
     public Set<Storable> getStorableItems() {
         Set<Storable> storables = new HashSet<>();
         for (Item item : items) {
@@ -33,20 +41,16 @@ public class Room {
     }
 
     public Set<Interactuable> getInteractuableItems() {
+        Set<Interactuable> interactuableItems = new HashSet<>();
         for (Item item : items) {
-            if (item instanceof Interactuable) {
+            if (item instanceof Interactuable) { //si es interactuable lo agrego
                 interactuableItems.add((Interactuable) item);
+            }
+            if(item instanceof Storable){ //pero si es storable no
+                interactuableItems.remove(item);
             }
         }
         return interactuableItems;
-    }
-    
-    public void addInteractuableItem(Interactuable item){
-        this.interactuableItems.add(item);
-    }
-    
-    public void removeInteractuableItem(Interactuable item){
-        this.interactuableItems.remove(item);
     }
 
     public String getTitle() {
@@ -100,6 +104,10 @@ public class Room {
     
     public boolean isDark(){
         return this.dark;
+    }
+    
+    public void fin(){
+
     }
 
     @Override

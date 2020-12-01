@@ -1,33 +1,34 @@
 package Items;
 
-import Interfaces.Abrible;
-import Interfaces.Usable;
-import Interfaces.Interactuable;
-import Interfaces.Storable;
-import java.util.Scanner;
-import textadventure.Game;
-import textadventure.Room;
+import Interfaces.*;
+import textadventure.*;
+import static textadventure.Game.in;
 
 public class Exit extends Item implements Interactuable, Abrible {
 
-    private Scanner in = new Scanner(System.in);
+    //ATRIBUTOS
     private String direction; //hacia donde está (n, s, e, w)
-    private Room leadsTo; //a qué room va
-
+    private Room leadsTo; //code de la room a la que va
     private boolean isOpened; // si está abierta o cerrrada
     private Usable opener; //el item Usable (llave o similar) para abrirla
-    private boolean isInteractuable; //si está cerrada, es interacuable, para poder abrirla
-
-    private boolean isBlocked; //si está bloqueada por algo
     private Interactuable interactuable; //algún interactuable (algo que la bloquee, un tablero, contraseña, etc)
 
-    public Exit(String exitName, String closedDescription, Room exitRoom, String direction, Room leadsTo, boolean isOpened) {
-        super(exitName, closedDescription, exitRoom);
+    //CONSTRUCTORES
+    public Exit(int code, String exitName, String exitDescription, String direction, Room leadsTo, boolean isOpened) {
+        super(code, exitName, exitDescription);
         this.direction = direction;
         this.leadsTo = leadsTo;
         this.isOpened = isOpened;
     }
+    
+    public Exit(int code, String direction, Room leadsTo){
+        super(code,"","");
+        this.direction = direction;
+        this.leadsTo = leadsTo;
+        this.isOpened = true;
+    }
 
+    //DIRECTION
     public void setDirection(String d) {
         this.direction = d;
     }
@@ -36,6 +37,7 @@ public class Exit extends Item implements Interactuable, Abrible {
         return this.direction;
     }
 
+    //LEADS TO
     public void setLeadsTo(Room room) {
         this.leadsTo = room;
     }
@@ -44,6 +46,7 @@ public class Exit extends Item implements Interactuable, Abrible {
         return this.leadsTo;
     }
 
+    //IsOPENED
     public void setIsOpened(boolean isOpened) {
         this.isOpened = isOpened;
     }
@@ -52,14 +55,7 @@ public class Exit extends Item implements Interactuable, Abrible {
         return this.isOpened;
     }
 
-    public void setClosedDescription(String closedDescription) {
-        this.itemDescription = closedDescription;
-    }
-
-    public String getClosedDescription() {
-        return itemDescription;
-    }
-
+    //OPENER
     public Usable getOpener() {
         return opener;
     }
@@ -68,30 +64,7 @@ public class Exit extends Item implements Interactuable, Abrible {
         this.opener = opener;
     }
 
-    public void setIsInteractuable(boolean isInteractuable) {
-        this.isInteractuable = isInteractuable;
-    }
-
-    public boolean getIsInteractuable() {
-        return this.isInteractuable;
-    }
-
-    public boolean isIsBlocked() {
-        return isBlocked;
-    }
-
-    public void setIsBlocked(boolean isBlocked) {
-        this.isBlocked = isBlocked;
-    }
-
-    public void setExitName(String name) {
-        this.itemName = name;
-    }
-
-    public String getExitName() {
-        return this.itemName;
-    }
-
+    //INTERACTUABLE
     public Interactuable getInteractuable() {
         return interactuable;
     }
@@ -109,12 +82,17 @@ public class Exit extends Item implements Interactuable, Abrible {
         System.out.println("");
         System.out.print("> ");
         String input = in.nextLine();
-        if (!this.validateUsableOpener(input)) {
-            System.out.println("No puedes usar \"" + input + "\" aquí...");
+        if (!this.validateInteract(input)) {
+            if(input.equals("")){
+                System.out.println("No has hecho nada...");
+            }else{
+                System.out.println("No es el item correcto...");
+            }
         }
     }
 
-    public boolean validateUsableOpener(String input) {
+    @Override
+    public boolean validateInteract(String input) {
         for (Storable item : Game.p.inventory) { //busco en el inventario
             Item obj = (Item) item; //guardo en Item el Storable
             if (input.equalsIgnoreCase(obj.getItemName()) && obj instanceof Usable) { //si mi entrada es igual al nombre del item y es unsable
@@ -122,28 +100,26 @@ public class Exit extends Item implements Interactuable, Abrible {
                 return this.openWith(llave);
             }
         }
-        System.out.println("No paso el validate");
         return false;
     }
 
     @Override
     public boolean openWith(Usable item) {
         if (item.equals(opener)) {
-            this.isOpened = true;
-            this.setIsInteractuable(false);
-            Item it = (Item) item;
+            this.isOpened = true; //abro la puerta
+            Game.p.setPlayerRoom(this.leadsTo); //paso a siguiente habitación
             System.out.println("");
             System.out.println(">> ¡Abriste la puerta! <<");
             in.nextLine();
-            Game.p.removeItem((Storable) item); //elimino la llave del inventario ya que no la voy a volver a usar
-            Game.p.getPlayerRoom().removeInteractuableItem(this); //saco esta exit de los interactuables que me muestra la habitación
-            Game.p.getPlayerRoom().removeItem(this);
-            System.out.println("Descartas: \"" + it.getItemName() + "\". Ya no lo necesitas");
             System.out.println("");
+            System.out.println("Pasas hacia...");
             return true;
         } else {
-            System.out.println("No paso el openwith");
             return false;
         }
+    }
+    
+    public void lastDoor(){
+        
     }
 }

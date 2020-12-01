@@ -6,17 +6,22 @@ import Interfaces.Interactuable;
 import Items.Item;
 import Items.Palanca;
 import java.util.*;
-import static textadventure.Game.in;
 import static textadventure.Game.p;
+import static textadventure.Game.in;
+import static textadventure.Game.juego;
 
 public class Player {
 
-    public Scanner in = new Scanner(System.in);
     public static Player jugador;
     private Room playerRoom;
     public Set<Storable> inventory = new HashSet<>();
+    private boolean gano = false;
 
     private Player() {
+    }
+
+    public boolean isGano() {
+        return this.gano;
     }
 
     public static Player getInstance() {
@@ -30,8 +35,8 @@ public class Player {
         return this.playerRoom;
     }
 
-    public void setPlayerRoom(Room r) {
-        this.playerRoom = r;
+    public void setPlayerRoom(Room room){
+        this.playerRoom = room;
     }
 
     //metodo para moverse
@@ -48,21 +53,30 @@ public class Player {
                     in.nextLine();
                 } else if (salida.isOpened()) { //si la salida está aberta seteo nueva habitación y salgo del bucle.
                     this.setPlayerRoom(salida.getLeadsTo());
+                    System.out.println("Pasas hacia...");
+                    in.nextLine();
                     break;
                 } else {
-                    if (salida.getInteractuable() != null) { //si la salida requere interactuar con algún interactuable para abrirla/desbloquearla
-                        Item s = (Item) salida.getInteractuable();
-                        this.playerRoom.addItem(s); //agrego el interactuable a la lista de items visibles en la room
-                        //System.out.println(s.getItemDescription()); //muestro la descripcion del interactuable
-                        salida.getInteractuable().interact();
+                    Interactuable i = salida.getInteractuable();
+                    if (i != null) { //si la salida requere interactuar con algún interactuable para abrirla/desbloquearla
+                        Item it = (Item) i;
+                        this.playerRoom.addItem(it); //agrego el interactuable a la lista de items visibles en la room    
+                        i.interact();
                         in.nextLine();
                         break;
-                    } else {
-                        System.out.println("");
-                        System.out.println(salida.getClosedDescription()); //si no está abierta muestro su descripción de cerrada
-                        salida.interact();
-                        in.nextLine();
-                        break;
+                    } else { //si NO tiene interactuable sólo está CERRADA
+                        if (salida.getOpener() != null) { //si la salida tiene llave para abrirse
+                            System.out.println("");
+                            System.out.println(salida.getItemDescription()); //si no está abierta muestro su descripción
+                            salida.interact();
+                            in.nextLine();
+                            break;
+                        } else {//si no tiene llave se abre de alguna otra manera (palanca), no hace falta interactuar
+                            System.out.println("");
+                            System.out.println(salida.getItemDescription()); //si no está abierta muestro su descripción
+                            in.nextLine();
+                            break;
+                        }
                     }
                 }
             } else {
@@ -80,10 +94,15 @@ public class Player {
             this.showAllStorableRoomItems(); //muestro todos los items que puedo tomar de la room
             System.out.println("");
             System.out.print("> ");
-            String entry = in.nextLine(); //ingreso el item que quiero
-            if (!this.validateTakeStorableItem(entry)) {
-                System.out.println("No es un item válido");
-            }//valido la entrada de teclado, si exite el item lo tomo, sino, imprimo "no es valido"
+            String input = in.nextLine(); //ingreso el item que quiero
+            if (!this.validateTakeStorableItem(input)) {
+                if (input.equalsIgnoreCase("")) {
+                    System.out.println("No has hecho nada...");
+                } else {
+                    System.out.println("No es un item correcto");
+                    //valido la entrada de teclado, si exite el item, interactúo, sino, imprimo "no es valido"
+                }
+            }
         }
     }
 
@@ -91,10 +110,12 @@ public class Player {
         this.inventory.remove(item);
     }
 
-    public void interactWith(String option) {
-        if (option.equalsIgnoreCase("i")) { //si quiero interactuar con un interactuable del inventario
-            this.validateInteract(this.getInteractuableInventory());
-        } else if (option.equalsIgnoreCase("h")) { //si quiero interactuar con un interactuable de la room
+    public void interactWith(int option) {
+        if (option == 2) { //si quiero interactuar con un interactuable del inventario
+            if (!this.inventory.isEmpty()) { //Si el inventario no está vacío                
+                this.validateInteract(this.getInteractuableInventory());
+            }
+        } else if (option == 1) { //si quiero interactuar con un interactuable de la room
             this.validateInteract(this.playerRoom.getInteractuableItems());
         } else {
             System.out.println("No es una opción válida");
@@ -103,16 +124,20 @@ public class Player {
 
     public void validateInteract(Set<Interactuable> interact) {
         if (interact.isEmpty()) { //si no tengo interactuables
-            System.out.println("No hay ningún objeto con el que puedas interactuar");
+            System.out.println("- No hay ningún objeto con el que puedas interactuar");
         } else {
-            System.out.println("¿Con qué objeto quieres interactuar?");
+            System.out.println("¿Con qué quieres interactuar?");
             this.showAllInteractuableItems(interact); //muestro los items interactuables del inventario/room
             System.out.println("");
             System.out.print("> ");
             String input = in.nextLine();
             if (!this.validateInteractuableItem(input, interact)) {
-                System.out.println("No es un item correcto");
-                //valido la entrada de teclado, si exite el item, interactúo, sino, imprimo "no es valido"
+                if (input.equalsIgnoreCase("")) {
+                    System.out.println("No has hecho nada...");
+                } else {
+                    System.out.println("No es un item correcto");
+                    //valido la entrada de teclado, si exite el item, interactúo, sino, imprimo "no es valido"
+                }
             }
         }
     }
@@ -129,7 +154,7 @@ public class Player {
 
     public void showInventory() {
         if (this.inventory.isEmpty()) {
-            System.out.println("Aún no tienes nada en el inventario");
+            System.out.println("- Aún no tienes nada en el inventario");
         } else {
             System.out.println("**INVENTARIO**");
             for (Storable item : inventory) {
@@ -158,7 +183,7 @@ public class Player {
                 this.inventory.add((Storable) it);
                 this.playerRoom.removeItem(it);
                 if (it instanceof Interactuable) {
-                    this.playerRoom.removeInteractuableItem((Interactuable) it);
+                    this.playerRoom.removeItem(it);
                 }
                 System.out.println("Has tomado " + it.getItemName());
                 return true;
@@ -194,9 +219,13 @@ public class Player {
             if (item instanceof Palanca) {
                 item.interact();
                 in.nextLine();
-                Game.showRoom();
+                juego.showRoom();
             }
         }
+    }
+
+    public void win() {
+        this.gano = true;
     }
 
 }

@@ -1,0 +1,20 @@
+[
+    {
+        "roomCode": 100,
+        "title": "Armario",
+        "description": "Un amplio armario",
+        "exits": [                          
+            {
+                "itemCode": 2,
+                "itemName": "Puerta del Armario",
+                "itemDescription": "La puerta del armario no parece ceder, tampoco tiene cerrojo...\nTiene que haber alguna forma de abrirla",
+                "direction": "n",
+                "leadsTo": 200,
+                "isOpened": false
+            }
+        ]
+    }
+]
+
+
+
