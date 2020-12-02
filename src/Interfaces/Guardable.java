@@ -1,5 +1,5 @@
 package Interfaces;
-public interface Storable {
+public interface Guardable {
     
     
     

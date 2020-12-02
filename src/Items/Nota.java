@@ -1,9 +1,9 @@
 package Items;
 
 import Interfaces.Interactuable;
-import Interfaces.Storable;
+import Interfaces.Guardable;
 
-public class Nota extends Item implements Interactuable, Storable{
+public class Nota extends Item implements Interactuable, Guardable{
 
     private String nota;
     

@@ -5,19 +5,19 @@ import java.util.*;
 import textadventure.*;
 import static textadventure.Game.in;
 
-public class Cofre extends Item implements Interactuable, Abrible {
+public class Contenedor extends Item implements Interactuable, Abrible {
 
     //ATRIBUTOS
     private Usable opener; //el item Usable que lo abre
-    private Interactuable interactuable; //el Interactuable que bloquea al Cofre (opcional)
-    private Set<Storable> treasures = new HashSet<>(); //items dentro del cofre
+    private Interactuable interactuable; //el Interactuable que bloquea al contenedor (opcional)
+    private Set<Guardable> treasures = new HashSet<>(); //items dentro del contenedor
     //INTs
     private int intOpener;
     private int intInteractuable;
     private Set<Integer> intTreasures = new HashSet<>();
 
     //CONSTRUCTOR
-    public Cofre(int code, String name, String description, int opener, int interactuable, Set<Integer> treasures) {
+    public Contenedor(int code, String name, String description, int opener, int interactuable, Set<Integer> treasures) {
         super(code, name, description);
         this.intOpener = opener;
         this.intInteractuable = interactuable;
@@ -57,17 +57,17 @@ public class Cofre extends Item implements Interactuable, Abrible {
 
     //TREASURES
     public void getTreasures() {
-        for (Storable treasure : treasures) {
+        for (Guardable treasure : treasures) {
             System.out.println("    -" + treasure);
             Game.p.inventory.add(treasure); //Agrego los tesoros al inventario
         }
     }
 
-    public void addTreasure(Storable item) {
+    public void addTreasure(Guardable item) {
         treasures.add(item);
     }
 
-    public void removeTreasure(Storable item) {
+    public void removeTreasure(Guardable item) {
         treasures.remove(item);
     }
 
@@ -103,7 +103,7 @@ public class Cofre extends Item implements Interactuable, Abrible {
 
     @Override
     public boolean validateInteract(String input) {
-        for (Storable item : Game.p.inventory) { //busco en el inventario
+        for (Guardable item : Game.p.inventory) { //busco en el inventario
             Item obj = (Item) item; //guardo en Item el Storable
             if (input.equalsIgnoreCase(obj.getItemName())) { //si mi entrada es igual al nombre del item
                 Usable llave = (Usable) obj;
@@ -129,6 +129,6 @@ public class Cofre extends Item implements Interactuable, Abrible {
         System.out.println("");
         System.out.println("Encuentras y guardas: ");
         this.getTreasures();
-        Game.p.getPlayerRoom().removeItem((Item) this);//saco el cofre de la habitación porque ya no lo necesito
+        Game.p.getPlayerRoom().removeItem((Item) this);//saco el contenedor de la habitación porque ya no lo necesito
     }
 }

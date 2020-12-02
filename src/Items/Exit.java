@@ -11,7 +11,7 @@ public class Exit extends Item implements Interactuable, Abrible {
     private Room leadsTo; //La room a la que va
     private boolean isOpened; // si está abierta o cerrrada
     private Usable opener; //el item Usable (llave o similar) para abrirla
-    private Interactuable interactuable; //algún interactuable (algo que la bloquee, un tablero, contraseña, etc)
+    private Interactuable interactuable; //algún interactuable (Bloqueador / Tablero)
     //INTS
     private int intLeadsTo;
     private int intOpener;
@@ -106,7 +106,7 @@ public class Exit extends Item implements Interactuable, Abrible {
 
     @Override
     public boolean validateInteract(String input) {
-        for (Storable item : Game.p.inventory) { //busco en el inventario
+        for (Guardable item : Game.p.inventory) { //busco en el inventario
             Item obj = (Item) item; //guardo en Item el Storable
             if (input.equalsIgnoreCase(obj.getItemName()) && obj instanceof Usable) { //si mi entrada es igual al nombre del item y es unsable
                 Usable llave = (Usable) obj;

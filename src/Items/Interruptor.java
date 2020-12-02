@@ -7,12 +7,12 @@ import java.util.Set;
 import textadventure.Game;
 import static textadventure.Game.p;
 
-public class Palanca extends Item implements Interactuable {
+public class Interruptor extends Item implements Interactuable {
 
     //ATRIBUTOS
-    private Exit unlock; //la palanca puede desbloquear una salida
-    private Set<Tablero> activate = new HashSet<>();//la palanca puede activar uno o mas tableros
-    private String unlockedDescription; //lo que aparece cuando activo la palanca
+    private Exit unlock; // el Interruptor puede desbloquear una salida
+    private Set<Tablero> activate = new HashSet<>();// el Interruptor puede activar uno o mas tableros
+    private String unlockedDescription; //lo que aparece cuando activo la el Interruptor
     //INTS
     private int intUnlock;
 
@@ -25,7 +25,7 @@ public class Palanca extends Item implements Interactuable {
     }
     private Set<Integer> intActivate = new HashSet<>();
 
-    public Palanca(int code, String itemName, String itemDescription, String unlockedDescription, int unlock, Set<Integer> activate) {
+    public Interruptor(int code, String itemName, String itemDescription, String unlockedDescription, int unlock, Set<Integer> activate) {
         super(code, itemName, itemDescription);
         this.unlockedDescription = unlockedDescription;
         this.intUnlock = unlock;
@@ -73,7 +73,7 @@ public class Palanca extends Item implements Interactuable {
                     t.setIsOn(true); //los activo
                 }
             }
-            p.getPlayerRoom().removeItem(this); //saco la palanca de la vista de la Room
+            p.getPlayerRoom().removeItem(this); //saco el Interruptor de la vista de la Room
             return true;
         }
         return false;

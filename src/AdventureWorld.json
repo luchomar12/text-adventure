@@ -253,46 +253,46 @@
             "llaveDescription": "Una majestuosa LLAVE DE ORO, parece ser la mas importante"
         }
     ],
-    "Cofres": [
+    "Contenedores": [
         {
-            "cofreCode": 9,
-            "cofreName": "Cofre Chico",
-            "cofreDescription": "Un COFRE CHICO de madera, tiene una pequeña cerradura",
-            "cofreOpener":1,
-            "cofreInteractuable":-1,
-            "cofreTreasures":[4,5,8]
+            "contenedorCode": 9,
+            "contenedorName": "Cofre Chico",
+            "contenedorDescription": "Un COFRE CHICO de madera, tiene una pequeña cerradura",
+            "contenedorOpener":1,
+            "contenedorInteractuable":-1,
+            "contenedorTreasures":[4,5,8]
         },
         {
-            "cofreCode": 17,
-            "cofreName": "Cofre de metal",
-            "cofreDescription": "Un COFRE DE METAL. No tiene cerradura",
-            "cofreOpener":-1,
-            "cofreInteractuable":18,
-            "cofreTreasures":[19]
+            "contenedorCode": 17,
+            "contenedorName": "Cofre de metal",
+            "contenedorDescription": "Un COFRE DE METAL. No tiene cerradura",
+            "contenedorOpener":-1,
+            "contenedorInteractuable":18,
+            "contenedorTreasures":[19]
         },
         {
-            "cofreCode": 39,
-            "cofreName": "Hogar",
-            "cofreDescription": "Un gran HOGAR de piedra",
-            "cofreOpener":-1,
-            "cofreInteractuable":38,
-            "cofreTreasures":[25,40]
+            "contenedorCode": 39,
+            "contenedorName": "Hogar",
+            "contenedorDescription": "Un gran HOGAR de piedra",
+            "contenedorOpener":-1,
+            "contenedorInteractuable":38,
+            "contenedorTreasures":[25,40]
         },
         {
-            "cofreCode": 21,
-            "cofreName": "Caja Fuerte",
-            "cofreDescription": "Una pequeña CAJA FUERTE con combinación a rosca",
-            "cofreOpener":-1,
-            "cofreInteractuable":24,
-            "cofreTreasures":[26]
+            "contenedorCode": 21,
+            "contenedorName": "Caja Fuerte",
+            "contenedorDescription": "Una pequeña CAJA FUERTE con combinación a rosca",
+            "contenedorOpener":-1,
+            "contenedorInteractuable":24,
+            "contenedorTreasures":[26]
         },
         {
-            "cofreCode": 27,
-            "cofreName": "Mochila",
-            "cofreDescription": "Una MOCHILA. El cierre tiene un pequeño candado",
-            "cofreOpener":25,
-            "cofreInteractuable":-1,
-            "cofreTreasures":[28,37]
+            "contenedorCode": 27,
+            "contenedorName": "Mochila",
+            "contenedorDescription": "Una MOCHILA. El cierre tiene un pequeño candado",
+            "contenedorOpener":25,
+            "contenedorInteractuable":-1,
+            "contenedorTreasures":[28,37]
         }
     ],
     "Notas": [
@@ -321,22 +321,22 @@
             "nNota":"Puedes inventar cualquier número de 3 cifras\nSi inviertes sus dígitos ¿Cuál es el mayor? ¡Réstalo al menor!\n¿Qué queda? ¿y si lo inviertes también?\nA ver si podemos sumar ese último número al resultado de la resta anterior\n¡ESA ES LA RESPUESTA!\nNota: No deben ser los 3 dígitos iguales.\nSi la resta da un número de 2 dígitos agrégale el 0 en las centenas"
         }
     ],
-    "Palancas": [
+    "Interruptores": [
         {
-            "palancaCode": 3,
-            "palancaName": "Palanca",
-            "palancaDescription": "Una PALANCA de madera incrustada en la pared. ¿Accionará algo?",
-            "palancaUnlockedDescription": "Has accionado la palanca. El ruido de algo destrabándose te sobresalta",
-            "palancaUnlock":2,
-            "palancaActivate":[null]
+            "interruptorCode": 3,
+            "interruptorName": "Palanca",
+            "interruptorDescription": "Una PALANCA de madera incrustada en la pared. ¿Accionará algo?",
+            "interruptorUnlockedDescription": "Has accionado la palanca. El ruido de algo destrabándose te sobresalta",
+            "interruptorUnlock":2,
+            "interruptorActivate":[null]
         },
         {
-            "palancaCode": 20,
-            "palancaName": "Switch",
-            "palancaDescription": "Un SWITCH para activar la corriente electrica de algo...",
-            "palancaUnlockedDescription": "Se prendió un led, algo parece haberse activado",
-            "palancaUnlock":-1,
-            "palancaActivate":[13,18]
+            "interruptorCode": 20,
+            "interruptorName": "Switch",
+            "interruptorDescription": "Un SWITCH para activar la corriente electrica de algo...",
+            "interruptorUnlockedDescription": "Se prendió un led, algo parece haberse activado",
+            "interruptorUnlock":-1,
+            "interruptorActivate":[13,18]
         }
     ],
     "Tableros": [
@@ -368,20 +368,20 @@
             "tableroIn":21
         }
     ],
-    "Placas": [
+    "Bloqueadores": [
         {
-            "placaCode": 7,
-            "placaName": "Chapa",
-            "placaDescription": "Una CHAPA en el cerrojo de la puerta.Tiene 4 tornillos...",
-            "placaIsOn":6,
-            "placaOpener":5
+            "bloqueadorCode": 7,
+            "bloqueadorName": "Chapa",
+            "bloqueadorDescription": "Una CHAPA en el cerrojo de la puerta.Tiene 4 tornillos...",
+            "bloqueadorIsOn":6,
+            "bloqueadorOpener":5
         },
         {
-            "placaCode": 38,
-            "placaName": "Placa de Metal",
-            "placaDescription": "Una PLACA DE METAL obstruye la boca del hogar. Está atornillada",
-            "placaIsOn":39,
-            "placaOpener":5
+            "bloqueadorCode": 38,
+            "bloqueadorName": "Placa de Metal",
+            "bloqueadorDescription": "Una PLACA DE METAL obstruye la boca del hogar. Está atornillada",
+            "bloqueadorIsOn":39,
+            "bloqueadorOpener":5
         }
     ]
 }

@@ -1,12 +1,12 @@
 package textadventure;
 
 import Items.Exit;
-import Interfaces.Storable;
 import Interfaces.Interactuable;
 import Items.Item;
 import java.util.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import Interfaces.Guardable;
 
 public class Room {
 
@@ -63,11 +63,11 @@ public class Room {
         return items;
     }
 
-    public Set<Storable> getStorableItems() {
-        Set<Storable> storables = new HashSet<>();
+    public Set<Guardable> getStorableItems() {
+        Set<Guardable> storables = new HashSet<>();
         for (Item item : items) {
-            if (item instanceof Storable) {
-                storables.add((Storable) item);
+            if (item instanceof Guardable) {
+                storables.add((Guardable) item);
             }
         }
         return storables;
@@ -79,7 +79,7 @@ public class Room {
             if (item instanceof Interactuable) { //si es interactuable lo agrego
                 interactuableItems.add((Interactuable) item);
             }
-            if (item instanceof Storable) { //pero si es storable no
+            if (item instanceof Guardable) { //pero si es storable no
                 interactuableItems.remove(item);
             }
         }

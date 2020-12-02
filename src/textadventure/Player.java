@@ -1,20 +1,18 @@
 package textadventure;
 
 import Items.Exit;
-import Interfaces.Storable;
 import Interfaces.Interactuable;
 import Items.Item;
-import Items.Palanca;
 import java.util.*;
 import static textadventure.Game.p;
 import static textadventure.Game.in;
-import static textadventure.Game.juego;
+import Interfaces.Guardable;
 
 public class Player {
 
     public static Player jugador;
     private Room playerRoom;
-    public Set<Storable> inventory = new HashSet<>();
+    public Set<Guardable> inventory = new HashSet<>();
     private boolean gano = false;
 
     private Player() {
@@ -39,7 +37,7 @@ public class Player {
         this.playerRoom = room;
     }
 
-    public void removeItem(Storable item) { // para borrar items del inventario
+    public void removeItem(Guardable item) { // para borrar items del inventario
         this.inventory.remove(item);
     }
 
@@ -110,10 +108,10 @@ public class Player {
     }
 
     public boolean validateTakeStorableItem(String input) {
-        for (Storable item : this.playerRoom.getStorableItems()) {
+        for (Guardable item : this.playerRoom.getStorableItems()) {
             Item it = (Item) item;
             if (input.equalsIgnoreCase(it.getItemName())) {
-                this.inventory.add((Storable) it);
+                this.inventory.add((Guardable) it);
                 this.playerRoom.removeItem(it);
                 if (it instanceof Interactuable) {
                     this.playerRoom.removeItem(it);
@@ -175,7 +173,7 @@ public class Player {
             System.out.println("- Aún no tienes nada en el inventario");
         } else {
             System.out.println("**INVENTARIO**");
-            for (Storable item : inventory) {
+            for (Guardable item : inventory) {
                 System.out.println("    -" + item);
             }
         }
@@ -183,7 +181,7 @@ public class Player {
 
     public Set<Interactuable> getInteractuableInventory() {
         Set<Interactuable> interactuableInventory = new HashSet<>();
-        for (Storable item : inventory) {
+        for (Guardable item : inventory) {
             if (item instanceof Interactuable) {
                 interactuableInventory.add((Interactuable) item);
             }
@@ -200,7 +198,7 @@ public class Player {
     }
 
     public void showAllStorableRoomItems() {
-        for (Storable item : this.playerRoom.getStorableItems()) {
+        for (Guardable item : this.playerRoom.getStorableItems()) {
             System.out.println("    -" + item);
         }
     }

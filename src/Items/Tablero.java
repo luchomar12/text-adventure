@@ -64,13 +64,13 @@ public class Tablero extends Item implements Interactuable {
                 if (this.getIn() instanceof Exit) { //si está en una salida
                     Exit e = (Exit)this.getIn();
                     e.setIsOpened(true); //abro la salida
-                    e.setInteractuable(null);//uso el interactuable (lo quita)
+                    e.setInteractuable(null);//seteo el Interactuable a null para que no aparezca
                     System.out.println("Parece que la salida se abrió...");
                     Game.p.setPlayerRoom(e.getLeadsTo()); //voy hacia la siguiente Room
-                } else if (this.getIn() instanceof Cofre) { //si está en un cofre
-                    Cofre c = (Cofre) this.getIn();
-                    c.setInteractuable(null); //le quito el interactuable al Cofre
-                    c.open(); //abro el cofre
+                } else if (this.getIn() instanceof Contenedor) { //si está en un Contenedor
+                    Contenedor c = (Contenedor) this.getIn();
+                    c.setInteractuable(null); //le quito el interactuable al Contenedor
+                    c.open(); //abro el Contenedor
                 }
             } else {
                 System.out.println("La contraseña no es correcta...");
