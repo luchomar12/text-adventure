@@ -1,14 +1,33 @@
 package textadventure;
 
+import Interfaces.Interactuable;
+import Interfaces.Storable;
+import Interfaces.Usable;
 import Items.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 public class Game {
 
     //INICIALIZO ATRIBUTOS
     public static Scanner in = new Scanner(System.in);
     public static Game juego;
     public static Player p = Player.getInstance();
-    private Set<Room> rooms = new HashSet<>();
+    public static Map<Integer, Room> rooms = new HashMap<>();
+    public static Map<Integer, Exit> exits = new HashMap<>();
+    private static Map<Integer, Llave> llaves = new HashMap<>();
+    private static Map<Integer, Cofre> cofres = new HashMap<>();
+    private static Map<Integer, Nota> notas = new HashMap<>();
+    private static Map<Integer, Palanca> palancas = new HashMap<>();
+    private static Map<Integer, Tablero> tableros = new HashMap<>();
+    private static Map<Integer, PlacaMetalica> placas = new HashMap<>();
+    private static Map<Integer, Item> items = new HashMap<>();
     private Set<String> menu = new TreeSet<>();
     private boolean end = false;
 
@@ -30,183 +49,286 @@ public class Game {
     }
 
     //INICIALIZO ITEMS, HABITACIONES, MENU, ETC 
-    public void init(){
-        
-        //INICIALIZO HABITACIONES
-        Room r1 = new Room();
-        Room r2 = new Room();
-        Room r3 = new Room();
-        Room r4 = new Room();
-        Room r5 = new Room();
-        Room r6 = new Room();
-        Room r7 = new Room();
-        Room r8 = new Room();
-        Room salida = new Room(); //salida
+    public void init() throws FileNotFoundException, IOException, ParseException {
+        FileReader file = new FileReader("src/Items/prueba.json");
+        JSONParser parser = new JSONParser();
+        JSONObject jsonWorld = (JSONObject) parser.parse(file);
 
-        //CREACION DE ITEMS/SALIDAS/ETC
-        
-        //Room1
-        Llave llave1 = new Llave(1, "Llave pequeña", "Una LLAVE PEQUEÑA, tirada en un rincón. Sólo entraría en pequeños cerrojos.");
-        Exit exitToPasillo = new Exit(2, "Puerta del Armario", "La puerta del armario no parece ceder, tampoco tiene cerrojo...\nTiene que haber alguna forma de abrirla", "n", r2, false); //salida cerrada hacia room2
-        Palanca palanca = new Palanca(3,"Palanca", "Una PALANCA de madera incrustada en la pared. ¿Accionará algo?","Has accionado la palanca. El ruido de algo destrabándose te sobresalta."); //está en r1 y habilita la exit1
+        //CREO LOS JSON ARRAYS
+        JSONArray jsonRooms = (JSONArray) jsonWorld.get("Rooms");
+        JSONArray jsonExits = (JSONArray) jsonWorld.get("Exits");
+        JSONArray jsonLlaves = (JSONArray) jsonWorld.get("Llaves");
+        JSONArray jsonCofres = (JSONArray) jsonWorld.get("Cofres");
+        JSONArray jsonNotas = (JSONArray) jsonWorld.get("Notas");
+        JSONArray jsonPalancas = (JSONArray) jsonWorld.get("Palancas");
+        JSONArray jsonTableros = (JSONArray) jsonWorld.get("Tableros");
+        JSONArray jsonPlacas = (JSONArray) jsonWorld.get("Placas");
 
-        //Room2
-        Llave llave2 = new Llave(4, "Llave de cobre", "Una LLAVE DE COBRE, de tamaño chico");
-        Llave destornillador = new Llave(5, "Destornillador", "Un destornillanor, puede ser útil para varias cosas...");
-        Exit exitToSala = new Exit(6, "Puerta del Pasillo", "En la PUERTA DEL PASILLO el cerrojo ya está libre...Debo introducir una llave para abrirla","n", r3, false); //salida cerrada hacia room3
-        PlacaMetalica placa = new PlacaMetalica(7, "Placa metalica", "Una PLACA METALICA en el cerrojo de la puerta.Tiene 4 tornillos...", destornillador);
-        Nota nota1 = new Nota(8, "Nota", "Es una NOTA... Creo que llego a leerla... ¿está escrita en clave?");
-        Cofre cofre1 = new Cofre(9, "Cofre Chico", "Un COFRE CHICO de madera, tiene una pequeña cerradura");
+        //CREO ROOMS
+        for (Object room : jsonRooms) {
+            JSONObject obj = (JSONObject) room;
+            int rCode = (int) (long) obj.get("roomCode");
+            String rTitle = (String) obj.get("roomTitle");
+            String rDescription = (String) obj.get("roomDescription");
+            JSONArray roomExits = (JSONArray) obj.get("roomExits"); //guardo las exits en un array
+            JSONArray roomItems = (JSONArray) obj.get("roomItems");
+            Room r = new Room(rCode, rTitle, rDescription);//creo la room
+            for (Object o : roomExits) { //agrego el codigo de las exits
+                if (o != null) {
+                    int ob = (int) (long) o;
+                    r.addIntegerExits(ob);
+                }
+            }
+            for (Object o : roomItems) { //agrego el codigo de los items
+                if (o != null) {
+                    int ob = (int) (long) o;
+                    r.addIntegerItems(ob);
+                }
+            }
+            rooms.put(r.getRoomCode(), r);//agrego la room a la lista de rooms
+        }
+        //CREO EXITS
+        for (Object exit : jsonExits) {
+            JSONObject obj = (JSONObject) exit;
+            int eCode = (int) (long) obj.get("exitCode");
+            String eTitle = (String) obj.get("exitName");
+            String eDescription = (String) obj.get("exitDescription");
+            String eDirection = (String) obj.get("exitDirection");
+            boolean eOpened = (boolean) obj.get("exitOpened");
+            int eLeadsTo = (int) (long) obj.get("exitLeadsTo");
+            int eOpener = (int) (long) obj.get("exitOpener");
+            int eInteractuable = (int) (long) obj.get("exitInteractuable");
+            Exit e = new Exit(eCode, eTitle, eDescription, eDirection, eOpened, eLeadsTo, eOpener, eInteractuable);
+            exits.put(e.getExitCode(), e);
+            items.put(e.getExitCode(), e);
+        }
 
-        //Room3
-        Exit exitToGarage = new Exit(10, "toGarage", "salida al garage","w", r4, true); //esta me lleva al garage, ya esta abierta
-        Exit exitToHabitacion = new Exit(11, "Puerta de Madera", "Una lujosa puerta de madera. Tiene un cerrojo ornamentado en plata. Está cerrada","e", r6, false);
-        Exit exitToSecreta = new Exit(12, "Puerta electrónica", "Parece una puerta corrediza electrica, está cerrada. Al costado hay un tabero.","n", r8, false);
-        Tablero tablero1 = new Tablero(13, "Tablero electrico", "Hay un TABLERO ELECTRICO está al lado de la puerta", false);
-        Nota diario = new Nota(14, "Diario personal", "Un DIARIO PERSONAL. Tiene sólo una historia... podría decirme algo interesante");
+        //CREO COFRES
+        for (Object cofre : jsonCofres) {
+            JSONObject obj = (JSONObject) cofre;
+            int cCode = (int) (long) obj.get("cofreCode");
+            String cTitle = (String) obj.get("cofreName");
+            String cDescription = (String) obj.get("cofreDescription");
+            int cOpener = (int) (long) obj.get("cofreOpener");
+            int cInteractuable = (int) (long) obj.get("cofreInteractuable");
+            JSONArray cTreasures = (JSONArray) obj.get("cofreTreasures");
+            Set<Integer> treasures = new HashSet<>();
+            for (Object o : cTreasures) {
+                if (o != null) {
+                    int ob = (int) (long) o;
+                    treasures.add(ob);
+                }
+            }
+            Cofre c = new Cofre(cCode, cTitle, cDescription, cOpener, cInteractuable, treasures);
+            cofres.put(c.getItemCode(), c);
+            items.put(c.getItemCode(), c);
+        }
 
-        //Room4
-        Exit exitToPatio = new Exit(15, "Puerta corrediza", "Una puerta corrediza, no tiene llave pero está trabada. Podría usar algo como palanca para destrabarla","s", r5, false);
-        Palanca interruptor = new Palanca(16, "Interruptor", "Un interruptor, supongo prende la luz...", "Moviste el interruptor ¡ahora sí se puede ver!");
-        Cofre cofre2 = new Cofre(17, "Cofre de metal", "Un COFRE DE METAL. No tiene cerradura");
-        Tablero tablero2 = new Tablero(18, "Display digital", "Ahora está activado. Parece que hay que introducir algo en la pantalla",false);
-        Llave llavePlata = new Llave(19, "Llave de Plata", "Una Llave mediana de Plata, muy ornamentada");
+        //CREO TABLEROS
+        for (Object tablero : jsonTableros) {
+            JSONObject obj = (JSONObject) tablero;
+            int tCode = (int) (long) obj.get("tableroCode");
+            String tTitle = (String) obj.get("tableroName");
+            String tDescription = (String) obj.get("tableroDescription");
+            boolean tIsOn = (boolean) obj.get("tableroIsOn");
+            String tInfo = (String) obj.get("tableroInfo");
+            int tIn = (int) (long) obj.get("tableroIn");
+            JSONArray tPass = (JSONArray) obj.get("tableroPass");
+            List<String> password = new ArrayList<>();
+            for (Object o : tPass) {
+                if (o != null) {
+                    String ob = (String) o;
+                    password.add(ob);
+                }
+            }
+            Tablero t = new Tablero(tCode, tTitle, tDescription, tIsOn, tInfo, tIn, password);
+            tableros.put(t.getItemCode(), t);
+            items.put(t.getItemCode(), t);
+        }
 
-        //Room5
-        Palanca switchElectrico = new Palanca(20, "Switch Electrico", "Un SWITCH ELECTRICO para activar la corriente electrica de algo...", "Se prendió un led, algo parece haberse activado");
+        //CREO PALANCAS
+        for (Object palanca : jsonPalancas) {
+            JSONObject obj = (JSONObject) palanca;
+            int pCode = (int) (long) obj.get("palancaCode");
+            String pTitle = (String) obj.get("palancaName");
+            String pDescription = (String) obj.get("palancaDescription");
+            String pUnlockedDescription = (String) obj.get("palancaUnlockedDescription");
+            int pUnlock = (int) (long) obj.get("palancaUnlock");
+            JSONArray palancaActivate = (JSONArray) obj.get("palancaActivate");
+            Set<Integer> activate = new HashSet<>();
+            for (Object o : palancaActivate) {
+                if (o != null) {
+                    int ob = (int) (long) o;
+                    activate.add(ob);
+                }
+            }
+            Palanca p = new Palanca(pCode, pTitle, pDescription, pUnlockedDescription, pUnlock, activate);
+            palancas.put(p.getItemCode(), p);
+            items.put(p.getItemCode(), p);
+        }
 
-        //Room6
-        PlacaMetalica placa2 = new PlacaMetalica(38, "Placa Metalica","Una PLACA METALICA obstruye la boca del hogar. Está atornillada",destornillador);
-        Cofre hogar = new Cofre(39, "Hogar", "Un gran HOGAR de piedra");
-        Cofre cajaFuerte = new Cofre(21, "Caja Fuerte", "Una pequeña CAJA FUERTE con combinación a rosca");
-        Exit exitToToilette = new Exit(22, "Puerta Toilette", "La pequeña pero elegante puerta está cerrada", "n", r7, false);
-        Tablero combinacion = new Tablero(24, "Combinacion a rosca", "La caja fuerte tiene una combinación a rosca", true);
-        Llave clip = new Llave(25, "Clip de pelo", "Un CLIP para el pelo de alambre muy fino... ¿me servirá?");
-        Llave llaveOrnamentada = new Llave(26, "Llave ornamentada", "Una pequeña LLAVE ORNAMENTADA");
-        Nota papelQuemado = new Nota(40,"Papel Quemado", "Aunque esté quemado se llega a leer algo");
-        
-        //Room7
-        Cofre mochila = new Cofre(27, "Mochila", "Una MOCHILA. El cierre tiene un pequeño candado");
-        Nota cuaderno = new Nota(28, "Cuaderno de Matematicas", "Un CUADERNO de matemáticas. Tiene algunas anotaciones... ");
-        Llave llaveOro = new Llave(37, "Llave de Oro", "Una majestuosa LLAVE DE ORO, parece ser la mas importante");
+        //CREO PLACAS
+        for (Object placa : jsonPlacas) {
+            JSONObject obj = (JSONObject) placa;
+            int plCode = (int) (long) obj.get("placaCode");
+            String plTitle = (String) obj.get("placaName");
+            String plDescription = (String) obj.get("placaDescription");
+            int pIsOn = (int) (long) obj.get("placaIsOn");
+            int pOpener = (int) (long) obj.get("placaOpener");
+            PlacaMetalica pm = new PlacaMetalica(plCode, plTitle, plDescription, pIsOn, pOpener);
+            placas.put(pm.getItemCode(), pm);
+            items.put(pm.getItemCode(), pm);
+        }
 
-        //Room8
-        Exit exitToSalida = new Exit(29, "Puerta Cristalina", "Una extraña PUERTA CRISTALINA, tiene un gran cerrojo bañado en oro en el centro", "n", salida, false);
+        //CREO LLAVES
+        for (Object llave : jsonLlaves) {
+            JSONObject obj = (JSONObject) llave;
+            int rCode = (int) (long) obj.get("llaveCode");
+            String rTitle = (String) obj.get("llaveName");
+            String rDescription = (String) obj.get("llaveDescription");
+            Llave ll = new Llave(rCode, rTitle, rDescription);
+            llaves.put(ll.getItemCode(), ll);
+            items.put(ll.getItemCode(), ll);
+        }
 
-        //SETEO/AGREGO COMPONENTES
-        //Room 1
-        palanca.setUnlock(exitToPasillo);
-        r1.setTitle("Armario");
-        r1.setDescription("Te encuentras en un amplio armario.\nDe todas maneras sientes la asfixia y las paredes parecen encerrarte cada vez mas.\nParece sólo haber una puerta al frente... ¿estará abierta?");
-        r1.addItem(llave1);
-        r1.addItem(palanca);
-        r1.addExit(exitToPasillo); //salida al norte a pasillo
+        //CREO NOTAS
+        for (Object nota : jsonNotas) {
+            JSONObject obj = (JSONObject) nota;
+            int nCode = (int) (long) obj.get("notaCode");
+            String nTitle = (String) obj.get("notaName");
+            String nDescription = (String) obj.get("notaDescription");
+            String nNota = (String) obj.get("nota");
+            Nota n = new Nota(nCode, nTitle, nDescription, nNota);
+            notas.put(n.getItemCode(), n);
+            items.put(n.getItemCode(), n);
+        }
 
-        //Room 2   
-        nota1.setNota("Viajamos por el reloj, por el tiempo\n-dos veces hacia el pasado-tres hacia el futuro-\nGira la rueda, has el intento\n-cuatro veces hacia el pasado-una hacia el futuro-");
-        placa.setIsOn(exitToSala);
-        exitToSala.setOpener(llave2);
-        exitToSala.setInteractuable(placa);
-        cofre1.setOpener(llave1);
-        cofre1.addTreasure(llave2);
-        cofre1.addTreasure(nota1);
-        cofre1.addTreasure(destornillador);
-        r2.setTitle("Pasillo");
-        r2.setDescription("Estás en un tenue pasillo. Entran tres delgados hilos de luz desde unas finas aberturas en lo alto de las paredes.\nAl costado hay una mesa con una pequeña cajita. Al fondo una puerta.");
-        r2.addItem(cofre1);
-        r2.addExit(new Exit(30, "s", r1)); //salida al sur a armario (ya abierta)
-        r2.addExit(exitToSala); //salida al norte a sala
+        //=======================================================================
+        //SETEO DE TODO
+        //SETEO ROOMS
+        for (Object room : jsonRooms) { //vuelvo a recorrer el json
+            JSONObject obj = (JSONObject) room;
+            JSONArray roomExits = (JSONArray) obj.get("roomExits"); //guardo las exits en un array
+            JSONArray roomItems = (JSONArray) obj.get("roomItems"); //los items
+            for (Room r : this.getAllRooms().values()) { //por cada habitacion
+                for (Object o : roomExits) {
+                    if (o != null) {
+                        int ob = (int) (long) o;
+                        if (r.getIntegerExits().contains(ob)) { //si la habitacion tiene el codigo del exit
+                            r.addExit(this.getAllExits().get(ob)); //agrego la exit
+                        }
+                    }
+                }
+                for (Object o : roomItems) {
+                    if (o != null) {
+                        int ob = (int) (long) o;
+                        if (r.getIntegerItems().contains(ob)) { //si la habitación tiene el codigo del item
+                            r.addItem(this.getAllItems().get(ob)); //agrego el item
+                        }
+                    }
+                }
+            }
+        }
 
-        //Room 3
-        diario.setNota("Doblé dos veces a la derecha, luego izquierda.\nObservé por arriba, luego giré a la izquierda\nPor último me agaché para saltar con ganas dos veces hacia arriba!");
-        tablero1.setPassword(new String[]{"1", "0", "8", "9"});
-        tablero1.setPassInfo("\"La contraseña es numérica. Ingresa la correcta y lograrás... salir\"");
-        tablero1.setIn(exitToSecreta);
-        exitToHabitacion.setOpener(llavePlata);
-        exitToSecreta.setInteractuable(tablero1);
-        r3.addItem(diario);
-        r3.setTitle("Sala");
-        r3.setDescription("Te encuentras en una gran sala de estar. Ves varias puertas y un librito apoyado sobre una cómoda.\nMmm... una de las puertas parece entreabierta... Otra tiene ... ¿un tablero?");
-        r3.addExit(new Exit(31, "s", r2));//salida al sur a pasillo (ya abierta)
-        r3.addExit(exitToGarage); //salida al oeste a garage
-        r3.addExit(exitToHabitacion); //salida al este a habitacion/cerrada
-        r3.addExit(exitToSecreta);
+        //SETEO EXITS
+        for (Object exit : jsonExits) { //vuelvo a recorrer el json
+            JSONObject obj = (JSONObject) exit;
+            int eLeadsTo = (int) (long) obj.get("exitLeadsTo");
+            int eOpener = (int) (long) obj.get("exitOpener");
+            int eInteractuable = (int) (long) obj.get("exitInteractuable");
+            for (Exit e : this.getAllExits().values()) { // recorro las Exits creadas
+                // si los id de los objetos del json coinciden con el id que guardé en cada Exit
+                if (eLeadsTo != -1 && eLeadsTo == e.getIntLeadsTo()) {
+                    e.setLeadsTo(Game.getAllRooms().get(eLeadsTo));
+                }
+                if (eOpener != -1 && eOpener == e.getIntOpener()) {
+                    e.setOpener((Usable) Game.getAllLlaves().get(eOpener));
+                }
+                if (eInteractuable != -1 && eInteractuable == e.getIntInteractuable()) {
+                    e.setInteractuable((Interactuable) Game.getAllItems().get(eInteractuable));
+                }
+            }
+        }
 
-        //Room 4
-        cofre2.setInteractuable(tablero2);
-        cofre2.addTreasure(llavePlata);
-        exitToPatio.setOpener(destornillador);
-        tablero2.setPassword(new String[]{"de", "de", "iz", "ar", "iz", "ab", "ar", "ar"});
-        tablero2.setPassInfo("\"La contraseña requiere de unas direcciones (de,iz,ar,ab). Introduce una dirección por vez\"");
-        tablero2.setIn(cofre2);
-        r4.setTitle("Garage");
-        r4.setDescription("Un garage. No hay ningún auto pero veo varias herramientas y objetos");
-        r4.setDark(true);
-        r4.addExit(new Exit(32, "e", r3)); //salida a room3 (abierta)
-        r4.addExit(exitToPatio); //salida al patio, trabada
-        r4.addItem(interruptor);
-        r4.addItem(cofre2);
+        //SETEO COFRES
+        for (Object cofre : jsonCofres) {
+            JSONObject obj = (JSONObject) cofre;
+            int cOpener = (int) (long) obj.get("cofreOpener");
+            int cInteractuable = (int) (long) obj.get("cofreInteractuable");
+            JSONArray cTreasures = (JSONArray) obj.get("cofreTreasures");
+            Set<Integer> treasures = new HashSet<>();
+            for (Object o : cTreasures) {
+                if (o != null) {
+                    int ob = (int) (long) o;
+                    treasures.add(ob);
+                }
+            }
+            for (Cofre c : Game.getAllCofres().values()) {
+                if (cOpener != -1 && cOpener == c.getIntOpener()) {
+                    c.setOpener((Usable) Game.getAllLlaves().get(cOpener));
+                }
+                if (cInteractuable != -1 && cInteractuable == c.getIntInteractuable()) {
+                    c.setInteractuable((Interactuable) Game.getAllItems().get(cInteractuable));
+                }
+                for (int t : treasures) { //recorro la lista de tesoros INT
+                    if (c.getIntTreasures().contains(t)) { //si la lista que ya habia guardado contiene al item
+                        c.addTreasure((Storable) Game.getAllItems().get(t)); //lo agrego
+                    }
+                }
+            }
+        }
 
-        //Room 5
-        switchElectrico.addTablero(tablero2);
-        switchElectrico.addTablero(tablero1);
-        r5.addItem(switchElectrico);
-        r5.addExit(new Exit(33, "n", r4));//de vuelta al garage, al norte
-        r5.setTitle("Patio");
-        r5.setDescription("Un patio, completamente desierto y enrejado. Mas allá se ven bosques, praderas y montañas...");
+        //SETEO TABLEROS
+        for (Object tablero : jsonTableros) {
+            JSONObject obj = (JSONObject) tablero;
+            int tIn = (int) (long) obj.get("tableroIn");
+            for (Tablero t : Game.getAllTableros().values()) {
+                if (tIn != -1 && tIn == t.getIntIn()) {
+                    t.setIn((Interactuable) Game.getAllItems().get(tIn));
+                }
+            }
 
-        //Room 6
-        combinacion.setPassInfo("Debo introducir secuencias de sentido(iz,de)/numero(1-9). Ejemplo: \"iz3\"");
-        combinacion.setPassword(new String[]{"iz2", "de3", "iz4", "de1"});
-        combinacion.setIn(cajaFuerte);
-        hogar.addTreasure(clip);
-        hogar.addTreasure(papelQuemado);
-        hogar.setInteractuable(placa2);
-        papelQuemado.setNota("...y por favor deshazte de esta nota...\n...caer en manos equivocadas...");
-        placa2.setIsOn(hogar);
-        cajaFuerte.setInteractuable(combinacion);
-        cajaFuerte.addTreasure(llaveOrnamentada);
-        exitToToilette.setOpener(llaveOrnamentada);
-        r6.addItem(cajaFuerte);
-        r6.addItem(hogar);
-        r6.addExit(exitToToilette);
-        r6.addExit(new Exit(34, "w", r3)); //puerta del dormitorio hacia la sala (ya abierta)
-        r6.setTitle("Dormitorio");
-        r6.setDescription("Un lujoso dormitorio. La cama es inmensa");
+        }
 
-        //Room 7
-        cuaderno.setNota("Puedes inventar cualquier número de 3 cifras\nSi inviertes sus dígitos ¿Cuál es el mayor? ¡Réstalo al menor!\n¿Qué queda? ¿y si lo inviertes también?\nA ver si podemos sumar ese último número al resultado de la resta anterior\n¡ESA ES LA RESPUESTA!\nNota: No deben ser los 3 dígitos iguales.\nSi la resta da un número de 2 dígitos agrégale el 0 en las centenas");
-        mochila.setOpener(clip);
-        mochila.addTreasure(cuaderno);
-        mochila.addTreasure(llaveOro);
-        r7.addItem(mochila);
-        r7.addExit(new Exit(35, "s", r6)); //puerta hacia dormitorio (ya abierta)
-        r7.setTitle("Toilette");
-        r7.setDescription("El baño en suite del dormitorio");
+        //SETEO PALANCAS
+        for (Object palanca : jsonPalancas) {
+            JSONObject obj = (JSONObject) palanca;
+            int pUnlock = (int) (long) obj.get("palancaUnlock");
+            JSONArray palancaActivate = (JSONArray) obj.get("palancaActivate");
+            Set<Integer> activate = new HashSet<>();
+            for (Object o : palancaActivate) {
+                if (o != null) {
+                    int ob = (int) (long) o;
+                    activate.add(ob);
+                }
+            }
+            for (Palanca p : Game.getAllPalancas().values()) {
+                if (pUnlock != -1 && pUnlock == p.getIntUnlock()) {
+                    p.setUnlock((Exit) Game.getAllExits().get(pUnlock));
+                }
+                for (int a : activate) { //recorro la lista de tesoros INT
+                    if (p.getIntActivate().contains(a)) { //si la lista que ya habia guardado contiene al item
+                        p.addActivate((Tablero) Game.getAllTableros().get(a)); //lo agrego
+                    }
+                }
+            }
+        }
 
-        //Room 8
-        exitToSalida.setOpener(llaveOro);
-        r8.addExit(exitToSalida);
-        r8.addExit(new Exit(36, "s", r3)); //puerta hacia sala (ya abierta)
-        r8.setTitle("Habitación secreta");
-        r8.setDescription("Una rara habitación. Parece una cápsula. La luz viene de todos lados sin un origen fijo.");
+        //SETEO PLACAS
+        for (Object placa : jsonPlacas) {
+            JSONObject obj = (JSONObject) placa;
+            int pIsOn = (int) (long) obj.get("placaIsOn");
+            int pOpener = (int) (long) obj.get("placaOpener");
+            for (PlacaMetalica p : Game.getAllPlacasMetalicas().values()) {
+                if (pIsOn != -1 && pIsOn == p.getIntIsOn()) {
+                    p.setIsOn(Game.getAllItems().get(pIsOn));
+                }
+                if (pOpener != -2 && pOpener == p.getIntOpener()) {
+                    p.setOpener((Llave) Game.getAllLlaves().get(pOpener));
+                }
+            }
+        }
 
-        //Salida
-        salida.setTitle("...");
-        salida.setDescription("\nSusurrantes brisas inundan tu escuchar\nImponentes montañas deleitan tu vista\nPrados eternos se abren ante ti");
-        
-
-        //AGREGO HABITACIONES AL CONJUNTO ROOMS
-        rooms.add(r1);
-        rooms.add(r2);
-        rooms.add(r3);
-        rooms.add(r4);
-        rooms.add(r5);
-        rooms.add(r6);
-        rooms.add(r7);
-        rooms.add(r8);
-        rooms.add(salida);        
-          
         //AGREGO ACCIONES AL MENU
         menu.add("1. Moverse");
         menu.add("2. Tomar item");
@@ -215,36 +337,64 @@ public class Game {
         menu.add("q. Salir del juego");
 
         //SETEO LA HABITACION DE INICIO
-        p.setPlayerRoom(r1);
-        //p.inventory.add(llaveOro);
-        //p.inventory.add(destornillador);
-
+        p.setPlayerRoom(Game.getAllRooms().get(100)); //Seteo al player en primer room
+        //p.inventory.add(Game.getAllLlaves().get(5));
     }
-    
+
+    public static Map<Integer, Room> getAllRooms() {
+        return rooms;
+    }
+
+    public static Map<Integer, Exit> getAllExits() {
+        return exits;
+    }
+
+    public static Map<Integer, Llave> getAllLlaves() {
+        return llaves;
+    }
+
+    public static Map<Integer, Tablero> getAllTableros() {
+        return tableros;
+    }
+
+    public static Map<Integer, Cofre> getAllCofres() {
+        return cofres;
+    }
+
+    public static Map<Integer, Nota> getAllNotas() {
+        return notas;
+    }
+
+    public static Map<Integer, Palanca> getAllPalancas() {
+        return palancas;
+    }
+
+    public static Map<Integer, PlacaMetalica> getAllPlacasMetalicas() {
+        return placas;
+    }
+
+    public static Map<Integer, Item> getAllItems() {
+        return items;
+    }
 
     //=======================================================================
     //PARA COMENZAR EL JUEGO EN EL MAIN
     //MUESTRO TITULO Y DESCRIPCION DE LA HABITACION 
     public void showRoom() {
-
-        if (p.getPlayerRoom().isDark()) {
-            p.choose();
+        System.out.println("========================================================");
+        System.out.println(p.getPlayerRoom().getTitle()); //muestra el titulo de la habitación actual del jugador
+        System.out.println("========================================================");
+        System.out.println(p.getPlayerRoom().getDescription()); //muestro la descripcion de la habitación actual del jugador
+        if (p.getPlayerRoom().getTitle().equalsIgnoreCase("...")) {
+            end();
+            return;
+        }
+        if (p.getPlayerRoom().getAllItems().isEmpty()) { //Muestro los objetos de la habitación, si los hay
+            System.out.println("");
+            System.out.println(">>Ya no queda nada importante en esta habitación");
+            System.out.println("");
         } else {
-            System.out.println("========================================================");
-            System.out.println(p.getPlayerRoom().getTitle()); //muestra el titulo de la habitación actual del jugador
-            System.out.println("========================================================");
-            System.out.println(p.getPlayerRoom().getDescription()); //muestro la descripcion de la habitación actual del jugador
-            if(p.getPlayerRoom().getTitle().equalsIgnoreCase("...")){
-                end();
-                return;
-            }
-            if (p.getPlayerRoom().getAllItems().isEmpty()) { //Muestro los objetos de la habitación, si los hay
-                System.out.println("");
-                System.out.println(">>Ya no queda nada importante en esta habitación");
-                System.out.println("");
-            } else {
-                p.showAllRoomItems();
-            }
+            p.showAllRoomItems();
         }
     }
 
@@ -290,15 +440,14 @@ public class Game {
     }
 
     //SALIDA - FIN DEL JUEGO
-
-    public void isEnd(boolean end){
+    public void isEnd(boolean end) {
         this.end = end;
     }
-    
-    public boolean getEnd(){
+
+    public boolean getEnd() {
         return this.end;
     }
-    
+
     public void end() {
         this.isEnd(true);
         System.out.println("¡¡¡Finalmente eres libre!!!");
@@ -311,6 +460,7 @@ public class Game {
         in.nextLine();
         System.out.println("***¡Gracias por Jugar!***");
         in.nextLine();
-        System.out.println("Esta aventura de texto fue realizada por Luciano Marchese, Emiliano Santand y Verónica López Perea");
+        System.out.println("Esta aventura de texto fue realizada por Luciano Marchese, Emiliano Santana y Verónica López Perea");
+        in.nextLine();
     }
 }

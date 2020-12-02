@@ -11,18 +11,41 @@ public class PlacaMetalica extends Item implements Interactuable {
     //ATRIBUTOS
     private Llave opener; //en estos casos sería el destornillador que es de tipo Llave
     private Item isOn;
+    //INTs
+    private int intIsOn;
+    private int intOpener;
 
     //CONSTRUCTOR
-    public PlacaMetalica(int code, String itemName, String itemDescription, Llave opener) {
+    public PlacaMetalica(int code, String itemName, String itemDescription, int pIsOn, int pOpener) {
         super(code, itemName, itemDescription);
-        this.opener = opener;
+        this.intIsOn = pIsOn;
+        this.intOpener = pOpener;
     }
 
-    
+    public int getIntIsOn() {
+        return intIsOn;
+    }
+
+    public int getIntOpener() {
+        return intOpener;
+    }
+
     public void setIsOn(Item item) {
         this.isOn = item;
     }
-    
+
+    public void setOpener(Llave item) {
+        this.opener = item;
+    }
+
+    public Llave getOpener() {
+        return this.opener;
+    }
+
+    public Item getIsOn() {
+        return this.isOn;
+    }
+
     @Override
     public void interact() {
         System.out.println(this.itemDescription); //muestro la descripcion de la placa
@@ -52,16 +75,16 @@ public class PlacaMetalica extends Item implements Interactuable {
         for (Storable item : Game.p.inventory) { //busco en el inventario
             Item i = (Item) item; //guardo en Item el Storable
             if (input.equalsIgnoreCase(i.getItemName())) { //si mi entrada es igual al nombre del item
-                if(i instanceof Usable){ //si lo que elijo es un usable
-                    if (opener.equals((Usable) i)) {
+                if (i instanceof Usable) { //si lo que elijo es un usable
+                    if (this.getOpener().equals((Usable) i)) { //si el opener es igual mi elección  
                         System.out.println("¡Has desatornillado la placa!");
                         Game.p.getPlayerRoom().removeItem(this); //borro la placa
-                        if (this.isOn instanceof Exit) {
-                            Exit e = (Exit)this.isOn;
+                        if (this.getIsOn() instanceof Exit) {
+                            Exit e = (Exit) this.getIsOn();
                             e.setInteractuable(null); //saco la placa de la Exit
                         }
-                        if(this.isOn instanceof Cofre){
-                            Cofre c = (Cofre)this.isOn;
+                        if (this.getIsOn() instanceof Cofre) {
+                            Cofre c = (Cofre) this.getIsOn();
                             c.setInteractuable(null); //saco la placa del Cofre
                             c.open();
                         }

@@ -1,14 +1,16 @@
 package textadventure;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
+import org.json.simple.parser.ParseException;
 public class TextAdventure {
     
     
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException, FileNotFoundException, ParseException{
         Scanner in = new Scanner(System.in);
         String input;
         Game juego = Game.getInstance();
         juego.init(); //inicializar todas las variables del juego
-
         System.out.println("Bienvenido a la Aventura de Texto");
         while (true) {
             juego.showRoom(); //descripción de la habitación en la que me encuentro

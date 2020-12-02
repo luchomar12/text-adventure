@@ -1,20 +1,387 @@
-[
-    {
-        "roomCode": 100,
-        "title": "Armario",
-        "description": "Un amplio armario",
-        "exits": [                          
-            {
-                "itemCode": 2,
-                "itemName": "Puerta del Armario",
-                "itemDescription": "La puerta del armario no parece ceder, tampoco tiene cerrojo...\nTiene que haber alguna forma de abrirla",
-                "direction": "n",
-                "leadsTo": 200,
-                "isOpened": false
-            }
-        ]
-    }
-]
-
-
-
+{
+    "Rooms": [
+        {
+            "roomCode": 100,
+            "roomTitle": "Armario",
+            "roomDescription": "Te encuentras en un amplio armario.\nDe todas maneras sientes la asfixia y las paredes parecen encerrarte cada vez mas.\nParece sólo haber una puerta al frente... ¿estará abierta?",
+            "roomExits": [2],
+            "roomItems": [1, 3]
+        },
+        {
+            "roomCode": 200,
+            "roomTitle": "Pasillo",
+            "roomDescription": "Estás en un tenue pasillo. Entran tres delgados hilos de luz desde unas finas aberturas en lo alto de las paredes.\nAl costado hay una mesa con una pequeña cajita. Al fondo una puerta.",
+            "roomExits": [6, 30],
+            "roomItems": [9]
+        },
+        {
+            "roomCode": 300,
+            "roomTitle": "Sala",
+            "roomDescription": "Te encuentras en una gran sala de estar. Ves varias puertas y un librito apoyado sobre una cómoda.\nMmm... una de las puertas parece entreabierta... Otra tiene ... ¿un tablero?",
+            "roomExits": [31, 10, 11, 12],
+            "roomItems": [14]
+        },
+        {
+            "roomCode": 400,
+            "roomTitle": "Garage",
+            "roomDescription": "Un garage. No hay ningún auto pero veo varias herramientas y objetos",
+            "roomExits": [32, 15],
+            "roomItems": [17]
+        },
+        {
+            "roomCode": 500,
+            "roomTitle": "Patio",
+            "roomDescription": "Un patio, completamente desierto y enrejado. Mas allá se ven bosques, praderas y montañas...",
+            "roomExits": [33],
+            "roomItems": [20]
+        },
+        {
+            "roomCode": 600,
+            "roomTitle": "Dormitorio",
+            "roomDescription": "Un lujoso dormitorio. La cama es inmensa",
+            "roomExits": [34, 22],
+            "roomItems": [39, 21]
+        },
+        {
+            "roomCode": 700,
+            "roomTitle": "Toilette",
+            "roomDescription": "El baño en suite del dormitorio",
+            "roomExits": [35],
+            "roomItems": [27]
+        },
+        {
+            "roomCode": 800,
+            "roomTitle": "Habitación Secreta",
+            "roomDescription": "Una rara habitación. Parece una cápsula. La luz viene de todos lados sin un origen fijo.",
+            "roomExits": [36, 29],
+            "roomItems": [null]
+        },
+        {
+            "roomCode": 900,
+            "roomTitle": "...",
+            "roomDescription": "Susurrantes brisas inundan tu escuchar\nImponentes montañas deleitan tu vista\nPrados eternos se abren ante ti",
+            "roomExits": [null, null],
+            "roomItems": [null]
+        }
+    ],
+    "Exits": [
+        {   
+            "exitCode": 2,
+            "exitName": "Puerta del Armario",
+            "exitDescription": "La puerta del armario no parece ceder, tampoco tiene cerrojo...\nTiene que haber alguna forma de abrirla",
+            "exitDirection": "n",
+            "exitLeadsTo": 200,
+            "exitOpened": false,
+            "exitOpener":-1,
+            "exitInteractuable":-1
+        },
+        {   
+            "exitCode": 6,
+            "exitName": "Puerta del Pasillo",
+            "exitDescription": "En la PUERTA DEL PASILLO el cerrojo ya está libre...Debo introducir una llave para abrirla",
+            "exitDirection": "n",
+            "exitLeadsTo": 300,
+            "exitOpened": false,
+            "exitOpener":4,
+            "exitInteractuable":7
+        },
+        {
+            "exitCode": 10,
+            "exitName": "to_Garage",
+            "exitDescription": "salida_garage",
+            "exitDirection": "w",
+            "exitLeadsTo": 400,
+            "exitOpened": true,
+            "exitOpener":-1,
+            "exitInteractuable":-1
+        },
+        {
+            "exitCode": 11,
+            "exitName": "Puerta de Madera",
+            "exitDescription": "Una lujosa puerta de madera. Tiene un cerrojo ornamentado en plata. Está cerrada",
+            "exitDirection": "e",
+            "exitLeadsTo": 600,
+            "exitOpened": false,
+            "exitOpener":19,
+            "exitInteractuable":-1
+        },
+        {
+            "exitCode": 12,
+            "exitName": "Puerta electrónica",
+            "exitDescription": "Parece una puerta corrediza electrica, está cerrada. Al costado hay un tabero.",
+            "exitDirection": "n",
+            "exitLeadsTo": 800,
+            "exitOpened": false,
+            "exitOpener":-1,
+            "exitInteractuable":13
+        },
+        {
+            "exitCode": 15,
+            "exitName": "Puerta Corrediza",
+            "exitDescription": "Una puerta corrediza, no tiene llave pero está trabada. Podría usar algo como palanca para destrabarla",
+            "exitDirection": "s",
+            "exitLeadsTo": 500,
+            "exitOpened": false,
+            "exitOpener":5,
+            "exitInteractuable":-1
+        },
+        {
+            "exitCode": 22,
+            "exitName": "Puerta del Toilette",
+            "exitDescription": "La pequeña pero elegante puerta está cerrada",
+            "exitDirection": "n",
+            "exitLeadsTo": 700,
+            "exitOpened": false,
+            "exitOpener":26,
+            "exitInteractuable":-1
+        },
+        {
+            "exitCode": 29,
+            "exitName": "Puerta Cristalina",
+            "exitDescription": "Una extraña PUERTA CRISTALINA, tiene un gran cerrojo bañado en oro en el centro",
+            "exitDirection": "n",
+            "exitLeadsTo": 900,
+            "exitOpened": false,
+            "exitOpener":37,
+            "exitInteractuable":-1
+        },
+        {
+            "exitCode": 30,
+            "exitName": "desde el pasillo",
+            "exitDescription": "salida al sur a armario ya abierta",
+            "exitDirection": "s",
+            "exitLeadsTo": 100,
+            "exitOpened": true,
+            "exitOpener":-1,
+            "exitInteractuable":-1
+        },
+        {
+            "exitCode": 31,
+            "exitName": "desde la sala",
+            "exitDescription": "salida al sur a pasillo ya abierta",
+            "exitDirection": "s",
+            "exitLeadsTo": 200,
+            "exitOpened": true,
+            "exitOpener":-1,
+            "exitInteractuable":-1
+        },
+        {
+            "exitCode": 32,
+            "exitName": "desde garage",
+            "exitDescription": "salida a sala ya abierta",
+            "exitDirection": "e",
+            "exitLeadsTo": 300,
+            "exitOpened": true,
+            "exitOpener":-1,
+            "exitInteractuable":-1
+        },
+        {
+            "exitCode": 33,
+            "exitName": "desde patio",
+            "exitDescription": "salida al garage ya abierta",
+            "exitDirection": "n",
+            "exitLeadsTo": 400,
+            "exitOpened": true,
+            "exitOpener":-1,
+            "exitInteractuable":-1
+        },
+        {
+            "exitCode": 34,
+            "exitName": "del dormitorio",
+            "exitDescription": "salida a la sala ya abierta",
+            "exitDirection": "w",
+            "exitLeadsTo": 300,
+            "exitOpened": true,
+            "exitOpener":-1,
+            "exitInteractuable":-1
+        },
+        {
+            "exitCode": 35,
+            "exitName": "del toilette",
+            "exitDescription": "salida al dormitorio ya abierta",
+            "exitDirection": "s",
+            "exitLeadsTo": 600,
+            "exitOpened": true,
+            "exitOpener":-1,
+            "exitInteractuable":-1
+        },
+        {
+            "exitCode": 36,
+            "exitName": "de la habitacion secreta",
+            "exitDescription": "salida a la sala ya abierta",
+            "exitDirection": "s",
+            "exitLeadsTo": 300,
+            "exitOpened": true,
+            "exitOpener":-1,
+            "exitInteractuable":-1
+        }
+    ],
+    "Llaves": [
+        {
+            "llaveCode": 1,
+            "llaveName": "Llave Pequeña",
+            "llaveDescription": "Una LLAVE PEQUEÑA, tirada en un rincón. Sólo entraría en pequeños cerrojos."
+        },
+        {
+            "llaveCode": 4,
+            "llaveName": "Llave de Cobre",
+            "llaveDescription": "Una LLAVE DE COBRE, de tamaño chico"
+        },
+        {
+            "llaveCode": 5,
+            "llaveName": "Destornillador",
+            "llaveDescription": "Un destornillanor, puede ser útil para varias cosas..."
+        },
+        {
+            "llaveCode": 19,
+            "llaveName": "Llave de Plata",
+            "llaveDescription": "Una Llave mediana de Plata, muy ornamentada"
+        },
+        {
+            "llaveCode": 25,
+            "llaveName": "Clip",
+            "llaveDescription": "Un CLIP de alambre para el pelo. Muy fino... ¿Me servirá?"
+        },
+        {
+            "llaveCode": 26,
+            "llaveName": "Llave Ornamentada",
+            "llaveDescription": "Una pequeña LLAVE ORNAMENTADA"
+        },
+        {
+            "llaveCode": 37,
+            "llaveName": "Llave de Oro",
+            "llaveDescription": "Una majestuosa LLAVE DE ORO, parece ser la mas importante"
+        }
+    ],
+    "Cofres": [
+        {
+            "cofreCode": 9,
+            "cofreName": "Cofre Chico",
+            "cofreDescription": "Un COFRE CHICO de madera, tiene una pequeña cerradura",
+            "cofreOpener":1,
+            "cofreInteractuable":-1,
+            "cofreTreasures":[4,5,8]
+        },
+        {
+            "cofreCode": 17,
+            "cofreName": "Cofre de metal",
+            "cofreDescription": "Un COFRE DE METAL. No tiene cerradura",
+            "cofreOpener":-1,
+            "cofreInteractuable":18,
+            "cofreTreasures":[19]
+        },
+        {
+            "cofreCode": 39,
+            "cofreName": "Hogar",
+            "cofreDescription": "Un gran HOGAR de piedra",
+            "cofreOpener":-1,
+            "cofreInteractuable":38,
+            "cofreTreasures":[25,40]
+        },
+        {
+            "cofreCode": 21,
+            "cofreName": "Caja Fuerte",
+            "cofreDescription": "Una pequeña CAJA FUERTE con combinación a rosca",
+            "cofreOpener":-1,
+            "cofreInteractuable":24,
+            "cofreTreasures":[26]
+        },
+        {
+            "cofreCode": 27,
+            "cofreName": "Mochila",
+            "cofreDescription": "Una MOCHILA. El cierre tiene un pequeño candado",
+            "cofreOpener":25,
+            "cofreInteractuable":-1,
+            "cofreTreasures":[28,37]
+        }
+    ],
+    "Notas": [
+        {
+            "notaCode": 8,
+            "notaName": "Nota",
+            "notaDescription": "Es una NOTA... Creo que llego a leerla... ¿está escrita en clave?",
+            "nNota":"Viajamos por el reloj, por el tiempo\n-dos veces hacia el pasado-tres hacia el futuro-\nGira la rueda, has el intento\n-cuatro veces hacia el pasado-una hacia el futuro-"
+        },
+        {
+            "notaCode": 14,
+            "notaName": "Diario Personal",
+            "notaDescription": "Un DIARIO PERSONAL. Tiene sólo una historia... podría decirme algo interesante",
+            "nNota":"Doblé dos veces a la derecha, luego izquierda.\nObservé por arriba, luego giré a la izquierda\nPor último me agaché para saltar con ganas dos veces hacia arriba!"
+        },
+        {
+            "notaCode": 40,
+            "notaName": "Papel Quemado",
+            "notaDescription": "Aunque esté quemado se llega a leer algo",
+            "nNota":"...y por favor deshazte de esta nota...\n...caer en manos equivocadas..."
+        },
+        {
+            "notaCode": 28,
+            "notaName": "Cuaderno",
+            "notaDescription": "Un CUADERNO de matemáticas. Tiene algunas anotaciones...",
+            "nNota":"Puedes inventar cualquier número de 3 cifras\nSi inviertes sus dígitos ¿Cuál es el mayor? ¡Réstalo al menor!\n¿Qué queda? ¿y si lo inviertes también?\nA ver si podemos sumar ese último número al resultado de la resta anterior\n¡ESA ES LA RESPUESTA!\nNota: No deben ser los 3 dígitos iguales.\nSi la resta da un número de 2 dígitos agrégale el 0 en las centenas"
+        }
+    ],
+    "Palancas": [
+        {
+            "palancaCode": 3,
+            "palancaName": "Palanca",
+            "palancaDescription": "Una PALANCA de madera incrustada en la pared. ¿Accionará algo?",
+            "palancaUnlockedDescription": "Has accionado la palanca. El ruido de algo destrabándose te sobresalta",
+            "palancaUnlock":2,
+            "palancaActivate":[null]
+        },
+        {
+            "palancaCode": 20,
+            "palancaName": "Switch",
+            "palancaDescription": "Un SWITCH para activar la corriente electrica de algo...",
+            "palancaUnlockedDescription": "Se prendió un led, algo parece haberse activado",
+            "palancaUnlock":-1,
+            "palancaActivate":[13,18]
+        }
+    ],
+    "Tableros": [
+        {
+            "tableroCode": 13,
+            "tableroName": "Tablero Eléctrico",
+            "tableroDescription": "Hay un TABLERO ELECTRICO está al lado de la puerta",
+            "tableroIsOn": false,
+            "tableroPass":["1","0","8","9"],
+            "tableroInfo":"\"La contraseña es numérica. Ingresa la correcta y lograrás... salir\"",
+            "tableroIn":12
+        },
+        {
+            "tableroCode": 18,
+            "tableroName": "Display Digital",
+            "tableroDescription": "Ahora está activado. Parece que hay que introducir algo en la pantalla",
+            "tableroIsOn": false,
+            "tableroPass":["de", "de", "iz", "ar", "iz", "ab", "ar", "ar"],
+            "tableroInfo":"\"La contraseña requiere de unas direcciones (de,iz,ar,ab). Introduce una dirección por vez\"",
+            "tableroIn":17
+        },
+        {
+            "tableroCode": 24,
+            "tableroName": "Combinación a Rosca",
+            "tableroDescription": "La caja fuerte tiene una combinación a rosca",
+            "tableroIsOn": true,
+            "tableroPass":["iz2", "de3", "iz4", "de1"],
+            "tableroInfo":"Debo introducir secuencias de sentido(iz,de)/numero(1-9). Ejemplo: \"iz3\"",
+            "tableroIn":21
+        }
+    ],
+    "Placas": [
+        {
+            "placaCode": 7,
+            "placaName": "Chapa",
+            "placaDescription": "Una CHAPA en el cerrojo de la puerta.Tiene 4 tornillos...",
+            "placaIsOn":6,
+            "placaOpener":5
+        },
+        {
+            "placaCode": 38,
+            "placaName": "Placa de Metal",
+            "placaDescription": "Una PLACA DE METAL obstruye la boca del hogar. Está atornillada",
+            "placaIsOn":39,
+            "placaOpener":5
+        }
+    ]
+}

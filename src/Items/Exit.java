@@ -8,42 +8,55 @@ public class Exit extends Item implements Interactuable, Abrible {
 
     //ATRIBUTOS
     private String direction; //hacia donde está (n, s, e, w)
-    private Room leadsTo; //code de la room a la que va
+    private Room leadsTo; //La room a la que va
     private boolean isOpened; // si está abierta o cerrrada
     private Usable opener; //el item Usable (llave o similar) para abrirla
     private Interactuable interactuable; //algún interactuable (algo que la bloquee, un tablero, contraseña, etc)
+    //INTS
+    private int intLeadsTo;
+    private int intOpener;
+    private int intInteractuable;
 
     //CONSTRUCTORES
-    public Exit(int code, String exitName, String exitDescription, String direction, Room leadsTo, boolean isOpened) {
+    public Exit(int code, String exitName, String exitDescription, String direction, boolean isOpened, int intLeadsTo, int intOpener, int intInteractuable) {
         super(code, exitName, exitDescription);
         this.direction = direction;
-        this.leadsTo = leadsTo;
         this.isOpened = isOpened;
+        this.intLeadsTo = intLeadsTo;
+        this.intOpener = intOpener;
+        this.intInteractuable = intInteractuable;
     }
-    
-    public Exit(int code, String direction, Room leadsTo){
-        super(code,"","");
-        this.direction = direction;
-        this.leadsTo = leadsTo;
-        this.isOpened = true;
+
+    public int getIntLeadsTo() {
+        return intLeadsTo;
+    }
+
+    public int getIntOpener() {
+        return intOpener;
+    }
+
+    public int getIntInteractuable() {
+        return intInteractuable;
+    }
+
+    public int getExitCode() {
+        return this.itemCode;
     }
 
     //DIRECTION
-    public void setDirection(String d) {
-        this.direction = d;
-    }
 
     public String getDirection() {
         return this.direction;
     }
 
     //LEADS TO
-    public void setLeadsTo(Room room) {
-        this.leadsTo = room;
-    }
 
     public Room getLeadsTo() {
         return this.leadsTo;
+    }
+    
+    public void setLeadsTo(Room r){
+        this.leadsTo = r;
     }
 
     //IsOPENED
@@ -57,22 +70,22 @@ public class Exit extends Item implements Interactuable, Abrible {
 
     //OPENER
     public Usable getOpener() {
-        return opener;
+        return this.opener;
     }
-
-    public void setOpener(Usable opener) {
-        this.opener = opener;
+    
+    public void setOpener(Usable u){
+        this.opener = u;
     }
 
     //INTERACTUABLE
     public Interactuable getInteractuable() {
-        return interactuable;
+        return this.interactuable;
     }
-
-    public void setInteractuable(Interactuable interactuable) {
-        this.interactuable = interactuable;
+    
+    public void setInteractuable(Interactuable i){
+        this.interactuable = i;
     }
-
+        
     @Override
     public void interact() {
         System.out.println("");
@@ -83,9 +96,9 @@ public class Exit extends Item implements Interactuable, Abrible {
         System.out.print("> ");
         String input = in.nextLine();
         if (!this.validateInteract(input)) {
-            if(input.equals("")){
+            if (input.equals("")) {
                 System.out.println("No has hecho nada...");
-            }else{
+            } else {
                 System.out.println("No es el item correcto...");
             }
         }
@@ -105,7 +118,7 @@ public class Exit extends Item implements Interactuable, Abrible {
 
     @Override
     public boolean openWith(Usable item) {
-        if (item.equals(opener)) {
+        if (item.equals(this.getOpener())) {
             this.isOpened = true; //abro la puerta
             Game.p.setPlayerRoom(this.leadsTo); //paso a siguiente habitación
             System.out.println("");
@@ -118,8 +131,10 @@ public class Exit extends Item implements Interactuable, Abrible {
             return false;
         }
     }
-    
-    public void lastDoor(){
-        
+
+    @Override
+    public String toString() {
+        return this.itemName;
     }
+
 }

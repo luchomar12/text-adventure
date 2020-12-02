@@ -7,11 +7,8 @@ public class Nota extends Item implements Interactuable, Storable{
 
     private String nota;
     
-    public Nota(int code, String itemName, String itemDescription) {
+    public Nota(int code, String itemName, String itemDescription, String nota) {
         super(code, itemName, itemDescription);
-    }
-    
-    public void setNota(String nota){
         this.nota = nota;
     }
     

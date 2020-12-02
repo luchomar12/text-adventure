@@ -11,14 +11,34 @@ public class Cofre extends Item implements Interactuable, Abrible {
     private Usable opener; //el item Usable que lo abre
     private Interactuable interactuable; //el Interactuable que bloquea al Cofre (opcional)
     private Set<Storable> treasures = new HashSet<>(); //items dentro del cofre
+    //INTs
+    private int intOpener;
+    private int intInteractuable;
+    private Set<Integer> intTreasures = new HashSet<>();
 
     //CONSTRUCTOR
-    public Cofre(int code, String name, String description) {
+    public Cofre(int code, String name, String description, int opener, int interactuable, Set<Integer> treasures) {
         super(code, name, description);
+        this.intOpener = opener;
+        this.intInteractuable = interactuable;
+        this.intTreasures = treasures;
+    }
+
+    public int getIntOpener() {
+        return intOpener;
+    }
+
+    public int getIntInteractuable() {
+        return intInteractuable;
+    }
+
+    public Set<Integer> getIntTreasures() {
+        return intTreasures;
     }
 
     //OPENER
     public void setOpener(Usable item) {
+
         this.opener = item;
     }
 
@@ -28,7 +48,7 @@ public class Cofre extends Item implements Interactuable, Abrible {
 
     //INTERACTUABLE
     public Interactuable getInteractuable() {
-        return interactuable;
+        return this.interactuable;
     }
 
     public void setInteractuable(Interactuable interactuable) {
@@ -54,11 +74,7 @@ public class Cofre extends Item implements Interactuable, Abrible {
     //INTERFACE Interactuable
     @Override
     public void interact() {
-        if (this.getInteractuable() != null) { //si TIENE un interactuable
-            Item i = (Item) this.getInteractuable();
-            System.out.println("Tiene un/a " + i.getItemName()); //Muestro el nombre del interactuable
-            this.getInteractuable().interact(); //Interactúo con el Interactuable
-        } else { // si NO tiene interactuable tiene llave
+        if (this.getInteractuable() == null) { // si NO tiene interactuable tiene llave
             System.out.println("Para abrirlo debes usar una llave");
             System.out.println("");
             if (Game.p.inventory.isEmpty()) {
@@ -71,13 +87,17 @@ public class Cofre extends Item implements Interactuable, Abrible {
                 System.out.print("> ");
                 String input = in.nextLine();
                 if (!this.validateInteract(input)) {
-                    if(input.equalsIgnoreCase("")){
+                    if (input.equalsIgnoreCase("")) {
                         System.out.println("No has hecho nada...");
-                    }else{
+                    } else {
                         System.out.println("No es el item correcto...");
                     }
                 }
             }
+        } else { //si TIENE un interactuable
+            Item i = (Item) this.getInteractuable();
+            System.out.println("Tiene un/a " + i.getItemName()); //Muestro el nombre del interactuable
+            this.getInteractuable().interact(); //Interactúo con el Interactuable
         }
     }
 
@@ -96,7 +116,7 @@ public class Cofre extends Item implements Interactuable, Abrible {
     //INTERFACE Abrible
     @Override
     public boolean openWith(Usable item) {
-        if (item.equals(opener)) {
+        if (item.equals(this.getOpener())) {
             this.open();
             return true;
         }

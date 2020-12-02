@@ -5,6 +5,7 @@ import Interfaces.Storable;
 import Interfaces.Interactuable;
 import Items.Item;
 import java.util.*;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Room {
@@ -12,24 +13,56 @@ public class Room {
     private int roomCode;
     private String title;
     private String description;
+    private List<Integer> intExits = new ArrayList<>();
+    private List<Integer> intItems = new ArrayList<>();
     private Set<Item> items = new HashSet<>(); //creo conjunto de todos los items de la habitación
     private Set<Exit> exits = new HashSet<>(); //salidas
-    private boolean dark; //si está o no iluminada la habitación
 
-    //CONSTRUCTOR
-    public Room() {
-        
+    
+    
+    
+    public List<Integer> getIntegerExits(){
+        return this.intExits;
     }
     
+    public void addIntegerExits(int e){
+        this.intExits.add(e);
+    }
+    
+    public List<Integer> getIntegerItems(){
+        return this.intItems;
+    }
+    
+    public void addIntegerItems(int i){
+        this.intItems.add(i);
+    }
+    
+    
+    
+    
+    
+    
+    //CONSTRUCTOR
+    public Room(int code, String title, String description) {
+        this.roomCode = code;
+        this.title = title;
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return this.roomCode + "-" + this.exits;
+    }
+
     //CODE
-    public int getRoomCode(){
+    public int getRoomCode() {
         return this.roomCode;
     }
 
     public Set<Item> getAllItems() {
         return items;
     }
-    
+
     public Set<Storable> getStorableItems() {
         Set<Storable> storables = new HashSet<>();
         for (Item item : items) {
@@ -46,7 +79,7 @@ public class Room {
             if (item instanceof Interactuable) { //si es interactuable lo agrego
                 interactuableItems.add((Interactuable) item);
             }
-            if(item instanceof Storable){ //pero si es storable no
+            if (item instanceof Storable) { //pero si es storable no
                 interactuableItems.remove(item);
             }
         }
@@ -97,22 +130,14 @@ public class Room {
     public Set<Exit> getExits() {
         return exits;
     }
-    
-    public void setDark(boolean dark){
-        this.dark = dark;
-    }
-    
-    public boolean isDark(){
-        return this.dark;
-    }
-    
-    public void fin(){
+
+    public void fin() {
 
     }
 
     @Override
     public int hashCode() {
-        return this.title.hashCode();
+        return this.roomCode;
     }
 
     @Override
