@@ -4,9 +4,9 @@ import Items.Exit;
 import Interfaces.Interactuable;
 import Items.Item;
 import java.util.*;
-import static textadventure.Game.p;
 import static textadventure.Game.in;
 import Interfaces.Guardable;
+import static textadventure.Game.juego;
 
 public class Player {
 
@@ -43,11 +43,12 @@ public class Player {
 
     //MOVER JUGADOR
     public void moverPlayer() {
-        System.out.println("Donde quieres ir? (n,s,e,w) o (b) para volver al menú.");
+        System.out.println("¿A qué dirección? (n/s/e/o) | (b) Volver al menú.");
+        System.out.print("> ");
         String direction = in.nextLine();
         if (direction.equals("b")) {
             return;
-        } else if (direction.equals("n") || direction.equals("s") || direction.equals("e") || direction.equals("w")) {
+        } else if (direction.equals("n") || direction.equals("s") || direction.equals("e") || direction.equals("o")) {
             this.validateMover(direction); //valido la dirección para moverme
         } else {
             System.out.println("No es una dirección válida");
@@ -80,7 +81,9 @@ public class Player {
             }
             in.nextLine();
         } else { //si la salida tiene un intermediario Interactuable
-            this.playerRoom.addItem((Item) i); //agrego el interactuable a la lista de items visibles en la room    
+            this.playerRoom.addItem((Item) i); //agrego el interactuable a la lista de items visibles en la room
+            Item it = (Item) i;
+            System.out.println("Tiene un/a " + it.getItemName());
             i.interact(); //interactuo con el Interactuable
             in.nextLine();
         }
@@ -192,7 +195,7 @@ public class Player {
     //MOSTRAR ITEMS
     public void showAllRoomItems() {
         System.out.println("Puedes ver... ");
-        for (Item item : p.getPlayerRoom().getAllItems()) {
+        for (Item item : juego.getPlayer().getPlayerRoom().getAllItems()) {
             System.out.println("    -" + item.getItemDescription());
         }
     }

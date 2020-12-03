@@ -3,18 +3,18 @@ package Items;
 import Interfaces.Interactuable;
 import Interfaces.Guardable;
 
-public class Nota extends Item implements Interactuable, Guardable{
+public class Nota extends Item implements Interactuable, Guardable {
 
     private String nota;
-    
+
     public Nota(int code, String itemName, String itemDescription, String nota) {
         super(code, itemName, itemDescription);
         this.nota = nota;
     }
-    
-    public String getNota(){
+
+    public String getNota() {
         return this.nota;
-    } 
+    }
 
     @Override
     public void interact() {

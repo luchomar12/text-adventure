@@ -1,6 +1,5 @@
 package textadventure;
 
-
 import Items.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,47 +10,33 @@ import org.json.simple.parser.ParseException;
 public class Game {
 
     //INICIALIZO ATRIBUTOS
-    public static Scanner in = new Scanner(System.in);
-    public static Game juego;
-    public static Player p = Player.getInstance();
-    public static Map<Integer, Room> rooms = new HashMap<>();
-    public static Map<Integer, Exit> exits = new HashMap<>();
-    private static Map<Integer, Llave> llaves = new HashMap<>();
-    private static Map<Integer, Contenedor> contenedores = new HashMap<>();
-    private static Map<Integer, Nota> notas = new HashMap<>();
-    private static Map<Integer, Interruptor> interruptores = new HashMap<>();
-    private static Map<Integer, Tablero> tableros = new HashMap<>();
-    private static Map<Integer, Bloqueador> bloqueadores = new HashMap<>();
-    private static Map<Integer, Item> items = new HashMap<>();
-    private Set<String> menu = new TreeSet<>();
-    private boolean isEnd = false;
+    public static Scanner in = new Scanner(System.in); //atributo input
+    public static Game juego; //instancia única de Game
+    private static Player p = Player.getInstance(); //instancia única de Player
+    private static Map<Integer, Room> rooms = new HashMap<>(); //Map con todas las Rooms
+    private static Map<Integer, Item> items = new HashMap<>(); //Map con todos los Items
+    private static Set<String> menu = new TreeSet<>(); //Conjunto con las opcinones del menú
+    private static boolean isEnd = false; //atributo para cuando termine el juego
 
     //CONSTRUCTOR
     private Game() {
-    }
 
-    //PIDO INSTANCIA UNICA
-    public static Game getInstance() {
-        if (juego == null) {
-            return new Game();
-        }
-        return juego;
     }
 
     //PIDO PLAYER
-    public Player getPlayer() {
-        return this.p;
+    public static Player getPlayer() {
+        return p;
     }
 
     //INICIALIZO TODO
-    public void init() throws FileNotFoundException, IOException, ParseException {
-        
+    public static void init() throws FileNotFoundException, IOException, ParseException {
+
         //METODO PARA LEER JSON Y CREAR LOS OBJETOS
         Config config = Config.getInstance(); //creo instancia unica de configuracion
-        JSONObject world = config.leerJson();
-        config.crearObjetos(world);
-        config.setearObjectos(world);
-        
+        JSONObject world = config.leerJson(); //leo el json
+        config.crearObjetos(world); //creo los objetos
+        config.setearObjectos(world); //seteo los objetos
+
         //AGREGO ACCIONES AL MENU
         menu.add("1. Moverse");
         menu.add("2. Tomar item");
@@ -63,54 +48,48 @@ public class Game {
         p.setPlayerRoom(Game.getAllRooms().get(100)); //Seteo al player en primer room
     }
 
-    // GETTER DE TODOS LOS MAPS DE OBJETOS
+    // GETTER DE TODOS LOS ROOMS E ITEMS
     public static Map<Integer, Room> getAllRooms() {
         return rooms;
-    }
-
-    public static Map<Integer, Exit> getAllExits() {
-        return exits;
-    }
-
-    public static Map<Integer, Llave> getAllLlaves() {
-        return llaves;
-    }
-
-    public static Map<Integer, Tablero> getAllTableros() {
-        return tableros;
-    }
-
-    public static Map<Integer, Contenedor> getAllContenedores() {
-        return contenedores;
-    }
-
-    public static Map<Integer, Nota> getAllNotas() {
-        return notas;
-    }
-
-    public static Map<Integer, Interruptor> getAllInterruptores() {
-        return interruptores;
-    }
-
-    public static Map<Integer, Bloqueador> getAllBloqueadores() {
-        return bloqueadores;
     }
 
     public static Map<Integer, Item> getAllItems() {
         return items;
     }
-    
- 
+
     //=======================================================================
     //=======================================================================
-    
     //PARA COMENZAR EL JUEGO EN EL MAIN
+    public static void showIntroduction() {
+        System.out.println("**********************************************");
+        System.out.println("");
+        System.out.println("No recuerdas bien cómo o por que....");
+        System.out.println("Dónde te has perdido o dónde te has caido....");
+        System.out.println("...");
+        System.out.println("Vuelves a oir...vuelves a oler... madera...");
+        System.out.println("Recuerdas tus manos, tus pies... tu cabeza...");
+        System.out.println("...");
+        System.out.println("Vuelves a ver... pero poca luz... vuelve la nitidez");
+        System.out.println("...");
+        System.out.println("-¿Por qué desperté?...aquí...");
+        System.out.println("...");
+        System.out.println("-¿Dónde estoy...?");
+        System.out.println("...");
+        System.out.println("");
+        System.out.println("");
+        System.out.println("**********************************************");
+        System.out.println(">> Presiona ENTER para comenzar <<");
+        System.out.print(">");
+        in.nextLine();
+    }
+
     //MUESTRO TITULO Y DESCRIPCION DE LA HABITACION 
-    public void showRoom() {
-        System.out.println("========================================================");
+    public static void showRoom() {
+        System.out.println("===============================================================================");
         System.out.println(p.getPlayerRoom().getTitle()); //muestra el titulo de la habitación actual del jugador
-        System.out.println("========================================================");
+        System.out.println("");
         System.out.println(p.getPlayerRoom().getDescription()); //muestro la descripcion de la habitación actual del jugador
+        System.out.println("===============================================================================");
         if (p.getPlayerRoom().getTitle().equalsIgnoreCase("...")) {
             end();
             return;
@@ -125,16 +104,19 @@ public class Game {
     }
 
     //MUESTRO MENU DE ACCIONES
-    public void showMenu() {
-        System.out.println("-----------------------");
+    public static void showMenu() {
+        System.out.println("_______________________________________________________________________________");
+        System.out.println("");
         System.out.println("¿Qué quieres hacer?");
         for (String accion : menu) {
             System.out.println(accion);
         }
+        System.out.print(">");
 
     }
+
     //INTERPRETO LA ELECCION DEL MENU Y LLAMO A SU CORRESPONDIENTE METODO
-    public void actionMenu(String entry) {
+    public static void actionMenu(String entry) {
         entry = entry.trim().toLowerCase();
         switch (entry) {
             case "1":
@@ -165,16 +147,16 @@ public class Game {
     }
 
     //SALIDA - FIN DEL JUEGO
-    public void isEnd(boolean end) {
-        this.isEnd = end;
+    public static void isEnd(boolean end) {
+        isEnd = end;
     }
 
-    public boolean getEnd() {
-        return this.isEnd;
+    public static boolean getEnd() {
+        return isEnd;
     }
 
-    public void end() {
-        this.isEnd(true);
+    public static void end() {
+        isEnd(true);
         System.out.println("¡¡¡Finalmente eres libre!!!");
         in.nextLine();
         System.out.println("...");

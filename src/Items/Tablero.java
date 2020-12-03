@@ -2,9 +2,8 @@ package Items;
 
 import Interfaces.Interactuable;
 import java.util.List;
-import textadventure.Game;
 import static textadventure.Game.in;
-import static textadventure.Game.p;
+import static textadventure.Game.juego;
 
 public class Tablero extends Item implements Interactuable {
 
@@ -13,17 +12,13 @@ public class Tablero extends Item implements Interactuable {
     private Interactuable interactuable; //Objeto interactuable en el que se encuentra
     private List<String> password; //password
     private String passInfo; //información para ingresar el password
-    //INTS
-    private int intIn;
 
     //CONSTRUCTOR
-    public Tablero(int code, String itemName, String itemDescription, boolean isOn, String tInfo, int tIn, List<String> pass) {
+    public Tablero(int code, String itemName, String itemDescription, boolean isOn, String tInfo, List<String> pass) {
         super(code, itemName, itemDescription);
         this.isOn = isOn;
         this.passInfo = tInfo;
-        this.intIn = tIn;
         this.password = pass;
-
     }
 
     //IsON
@@ -52,21 +47,24 @@ public class Tablero extends Item implements Interactuable {
     //Interface INTERACTUABLE
     @Override
     public void interact() {
-        System.out.println(this.itemDescription); //Muestro descripcion del tablero
         if (this.isOn) { //si el Tablero está prendido
+            System.out.println(this.itemDescription); //Muestro descripcion del tablero
             System.out.println("");
             System.out.println("Hay información para la contraseña:");
             System.out.println(this.getPassInfo()); //muestro la info para la contraseña
             in.nextLine();
             if (validatePassword()) {
                 System.out.println("¡Contraseña correcta!");
-                p.getPlayerRoom().removeItem(this); // saco el tablero de la vista de la Room
+                juego.getPlayer().getPlayerRoom().removeItem(this); // saco el tablero de la vista de la Room
                 if (this.getIn() instanceof Exit) { //si está en una salida
-                    Exit e = (Exit)this.getIn();
+                    Exit e = (Exit) this.getIn();
                     e.setIsOpened(true); //abro la salida
                     e.setInteractuable(null);//seteo el Interactuable a null para que no aparezca
                     System.out.println("Parece que la salida se abrió...");
-                    Game.p.setPlayerRoom(e.getLeadsTo()); //voy hacia la siguiente Room
+                    System.out.println("");
+                    System.out.println("Pasas hacia...");
+                    in.nextLine();
+                    juego.getPlayer().setPlayerRoom(e.getLeadsTo()); //voy hacia la siguiente Room
                 } else if (this.getIn() instanceof Contenedor) { //si está en un Contenedor
                     Contenedor c = (Contenedor) this.getIn();
                     c.setInteractuable(null); //le quito el interactuable al Contenedor
@@ -76,14 +74,11 @@ public class Tablero extends Item implements Interactuable {
                 System.out.println("La contraseña no es correcta...");
             }
         } else { //Si el tablero está apagado
+            System.out.println("Un tablero en frente");
             System.out.println("En la pantalla no ocurre nada cuando la aprieto.");
             System.out.println("El led está apagado. Evidentemente no está activado.");
             System.out.println("Debe haber una manera de activarlo en alguna habitación...");
         }
-    }
-
-    public int getIntIn() {
-        return intIn;
     }
 
     public boolean validatePassword() {

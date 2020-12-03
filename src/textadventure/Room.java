@@ -13,35 +13,9 @@ public class Room {
     private int roomCode;
     private String title;
     private String description;
-    private List<Integer> intExits = new ArrayList<>();
-    private List<Integer> intItems = new ArrayList<>();
     private Set<Item> items = new HashSet<>(); //creo conjunto de todos los items de la habitación
     private Set<Exit> exits = new HashSet<>(); //salidas
 
-    
-    
-    
-    public List<Integer> getIntegerExits(){
-        return this.intExits;
-    }
-    
-    public void addIntegerExits(int e){
-        this.intExits.add(e);
-    }
-    
-    public List<Integer> getIntegerItems(){
-        return this.intItems;
-    }
-    
-    public void addIntegerItems(int i){
-        this.intItems.add(i);
-    }
-    
-    
-    
-    
-    
-    
     //CONSTRUCTOR
     public Room(int code, String title, String description) {
         this.roomCode = code;
@@ -129,10 +103,6 @@ public class Room {
 
     public Set<Exit> getExits() {
         return exits;
-    }
-
-    public void fin() {
-
     }
 
     @Override

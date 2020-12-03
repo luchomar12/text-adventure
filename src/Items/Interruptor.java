@@ -4,8 +4,7 @@ import static textadventure.Game.in;
 import Interfaces.Interactuable;
 import java.util.HashSet;
 import java.util.Set;
-import textadventure.Game;
-import static textadventure.Game.p;
+import static textadventure.Game.juego;
 
 public class Interruptor extends Item implements Interactuable {
 
@@ -13,23 +12,10 @@ public class Interruptor extends Item implements Interactuable {
     private Exit unlock; // el Interruptor puede desbloquear una salida
     private Set<Tablero> activate = new HashSet<>();// el Interruptor puede activar uno o mas tableros
     private String unlockedDescription; //lo que aparece cuando activo la el Interruptor
-    //INTS
-    private int intUnlock;
 
-    public int getIntUnlock() {
-        return intUnlock;
-    }
-
-    public Set<Integer> getIntActivate() {
-        return intActivate;
-    }
-    private Set<Integer> intActivate = new HashSet<>();
-
-    public Interruptor(int code, String itemName, String itemDescription, String unlockedDescription, int unlock, Set<Integer> activate) {
+    public Interruptor(int code, String itemName, String itemDescription, String unlockedDescription) {
         super(code, itemName, itemDescription);
         this.unlockedDescription = unlockedDescription;
-        this.intUnlock = unlock;
-        this.intActivate = activate;
 
     }
 
@@ -73,9 +59,10 @@ public class Interruptor extends Item implements Interactuable {
                     t.setIsOn(true); //los activo
                 }
             }
-            p.getPlayerRoom().removeItem(this); //saco el Interruptor de la vista de la Room
+            juego.getPlayer().getPlayerRoom().removeItem(this); //saco el Interruptor de la vista de la Room
             return true;
         }
         return false;
     }
+
 }

@@ -2,32 +2,19 @@ package Items;
 
 import Interfaces.Interactuable;
 import Interfaces.Usable;
-import textadventure.Game;
-import static textadventure.Game.in;
 import Interfaces.Guardable;
+import static textadventure.Game.in;
+import static textadventure.Game.juego;
 
 public class Bloqueador extends Item implements Interactuable {
 
     //ATRIBUTOS
     private Llave opener; //en estos casos sería el destornillador que es de tipo Llave
     private Item isOn;
-    //INTs
-    private int intIsOn;
-    private int intOpener;
 
     //CONSTRUCTOR
-    public Bloqueador(int code, String itemName, String itemDescription, int pIsOn, int pOpener) {
+    public Bloqueador(int code, String itemName, String itemDescription) {
         super(code, itemName, itemDescription);
-        this.intIsOn = pIsOn;
-        this.intOpener = pOpener;
-    }
-
-    public int getIntIsOn() {
-        return intIsOn;
-    }
-
-    public int getIntOpener() {
-        return intOpener;
     }
 
     public void setIsOn(Item item) {
@@ -49,14 +36,14 @@ public class Bloqueador extends Item implements Interactuable {
     @Override
     public void interact() {
         System.out.println(this.itemDescription); //muestro la descripcion del bloqueador
-        if (Game.p.inventory.isEmpty()) { //si no tengo nada para abrirlo
+        if (juego.getPlayer().inventory.isEmpty()) { //si no tengo nada para abrirlo
             System.out.println("");
             System.out.println("No tienes nada pasa usar");
         } else {
             in.nextLine();
             System.out.println("¿Qué vas a usar?");
             System.out.println("");
-            Game.p.showInventory();
+            juego.getPlayer().showInventory();
             System.out.println("");
             System.out.print("> ");
             String input = in.nextLine();
@@ -72,13 +59,13 @@ public class Bloqueador extends Item implements Interactuable {
 
     @Override
     public boolean validateInteract(String input) {
-        for (Guardable item : Game.p.inventory) { //busco en el inventario
+        for (Guardable item : juego.getPlayer().inventory) { //busco en el inventario
             Item i = (Item) item; //guardo en Item el Storable
             if (input.equalsIgnoreCase(i.getItemName())) { //si mi entrada es igual al nombre del item
                 if (i instanceof Usable) { //si lo que elijo es un usable
                     if (this.getOpener().equals((Usable) i)) { //si el opener es igual mi elección  
                         System.out.println("¡Has desatornillado la placa!");
-                        Game.p.getPlayerRoom().removeItem(this); //borro el bloqueador
+                        juego.getPlayer().getPlayerRoom().removeItem(this); //borro el bloqueador
                         if (this.getIsOn() instanceof Exit) {
                             Exit e = (Exit) this.getIsOn();
                             e.setInteractuable(null); //saco el bloqueador de la Exit
@@ -95,5 +82,4 @@ public class Bloqueador extends Item implements Interactuable {
         }
         return false;
     }
-
 }
