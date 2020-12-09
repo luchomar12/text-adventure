@@ -1,13 +1,15 @@
 package Items;
 
 import Interfaces.*;
+import java.util.Scanner;
+import org.json.simple.JSONObject;
 import textadventure.*;
-import static textadventure.Game.in;
-import static textadventure.Game.juego;
 
 public class Exit extends Item implements Interactuable, Abrible {
 
     //ATRIBUTOS
+    private Game juego = Game.dameInstancia();
+    private Scanner in = new Scanner(System.in);
     private String direction; //hacia donde está (n, s, e, w)
     private Room leadsTo; //La room a la que va
     private boolean isOpened; // si está abierta o cerrrada
@@ -19,6 +21,16 @@ public class Exit extends Item implements Interactuable, Abrible {
         super(code, exitName, exitDescription);
         this.direction = direction;
         this.isOpened = isOpened;
+    }
+
+    public static Exit leerJson(JSONObject obj) {
+        int eCode = (int) (long) obj.get("exitCode");
+        String eTitle = (String) obj.get("exitName");
+        String eDescription = (String) obj.get("exitDescription");
+        String eDirection = (String) obj.get("exitDirection");
+        boolean eOpened = (boolean) obj.get("exitOpened");
+        Exit e = new Exit(eCode, eTitle, eDescription, eDirection, eOpened);
+        return e;
     }
 
     public int getExitCode() {
@@ -86,7 +98,7 @@ public class Exit extends Item implements Interactuable, Abrible {
 
     @Override
     public boolean validateInteract(String input) {
-        for (Guardable item : juego.getPlayer().inventory) { //busco en el inventario
+        for (Guardable item : juego.getPlayer().getInventory()) { //busco en el inventario
             Item obj = (Item) item; //guardo en Item el Storable
             if (input.equalsIgnoreCase(obj.getItemName()) && obj instanceof Usable) { //si mi entrada es igual al nombre del item y es unsable
                 Usable llave = (Usable) obj;
@@ -103,7 +115,6 @@ public class Exit extends Item implements Interactuable, Abrible {
             juego.getPlayer().setPlayerRoom(this.leadsTo); //paso a siguiente habitación
             System.out.println("");
             System.out.println(">> ¡Abriste la puerta! <<");
-            in.nextLine();
             System.out.println("");
             System.out.println("Pasas hacia...");
             return true;

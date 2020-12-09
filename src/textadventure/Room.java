@@ -4,9 +4,8 @@ import Items.Exit;
 import Interfaces.Interactuable;
 import Items.Item;
 import java.util.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import Interfaces.Guardable;
+import org.json.simple.JSONObject;
 
 public class Room {
 
@@ -23,9 +22,17 @@ public class Room {
         this.description = description;
     }
 
+    public static Room leerJson(JSONObject obj) {
+        int rCode = (int) (long) obj.get("roomCode");
+        String rTitle = (String) obj.get("roomTitle");
+        String rDescription = (String) obj.get("roomDescription");
+        Room r = new Room(rCode, rTitle, rDescription);//creo la room
+        return r;
+    }
+
     @Override
     public String toString() {
-        return this.roomCode + "-" + this.exits;
+        return this.roomCode + "-" + this.title;
     }
 
     //CODE

@@ -2,6 +2,7 @@ package Items;
 
 import Interfaces.Interactuable;
 import Interfaces.Guardable;
+import org.json.simple.JSONObject;
 
 public class Nota extends Item implements Interactuable, Guardable {
 
@@ -10,6 +11,15 @@ public class Nota extends Item implements Interactuable, Guardable {
     public Nota(int code, String itemName, String itemDescription, String nota) {
         super(code, itemName, itemDescription);
         this.nota = nota;
+    }
+
+    public static Nota leerJson(JSONObject obj) {
+        int nCode = (int) (long) obj.get("notaCode");
+        String nTitle = (String) obj.get("notaName");
+        String nDescription = (String) obj.get("notaDescription");
+        String nNota = (String) obj.get("nNota");
+        Nota n = new Nota(nCode, nTitle, nDescription, nNota);
+        return n;
     }
 
     public String getNota() {

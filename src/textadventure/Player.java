@@ -4,29 +4,21 @@ import Items.Exit;
 import Interfaces.Interactuable;
 import Items.Item;
 import java.util.*;
-import static textadventure.Game.in;
 import Interfaces.Guardable;
-import static textadventure.Game.juego;
 
 public class Player {
 
-    public static Player jugador;
+    private Scanner in = new Scanner(System.in);
+    // PROFE: para que es este player estatico? mejor tener una instancia de game y pedir el jugador ahi //RESUELTO OK
     private Room playerRoom;
-    public Set<Guardable> inventory = new HashSet<>();
+    private Set<Guardable> inventory = new HashSet<>(); // PROFE: hacer un getter mejor de atributos publicos//RESUELTO OK
     private boolean gano = false;
 
-    private Player() {
+    public Player() {
     }
 
     public boolean isGano() {
         return this.gano;
-    }
-
-    public static Player getInstance() {
-        if (jugador == null) {
-            return new Player();
-        }
-        return jugador;
     }
 
     public Room getPlayerRoom() {
@@ -37,13 +29,29 @@ public class Player {
         this.playerRoom = room;
     }
 
+    public void addInventory(Guardable item) {
+        this.inventory.add(item);
+    }
+
     public void removeItem(Guardable item) { // para borrar items del inventario
         this.inventory.remove(item);
+    }
+    
+    public Set<Guardable> getInventory(){
+        return this.inventory;
     }
 
     //MOVER JUGADOR
     public void moverPlayer() {
-        System.out.println("¿A qué dirección? (n/s/e/o) | (b) Volver al menú.");
+        // PROFE: pueden hacer que las direcciones que se muestran sean solo las que haya realmente algo en esa direccion?
+        //RESUELTO OK
+        System.out.println("¿A qué dirección? (n/s/e/o)| (b) Volver al menú.");
+        System.out.print("Ves salida al: ");
+        for(Exit e : getPlayerRoom().getExits()){ //muestro direcciones disponibles
+            System.out.print(e.getDirection().toUpperCase());
+            System.out.print(", ");
+        }
+        System.out.println("\b\b");
         System.out.print("> ");
         String direction = in.nextLine();
         if (direction.equals("b")) {
@@ -60,11 +68,9 @@ public class Player {
         Exit exit = this.playerRoom.isExit(direction); //si hay salida este metodo me devuelve la Exit
         if (exit == null) { // si la salida es null es que no hay salida en esa dirección
             System.out.println("No hay salida en esa dirección");
-            in.nextLine();
         } else if (exit.isOpened()) { //si la salida está aberta seteo nueva habitación
             this.setPlayerRoom(exit.getLeadsTo());
             System.out.println("Pasas hacia...");
-            in.nextLine();
         } else { //la salida está cerrada, interactuo con la salida
             this.moverConInteractuables(exit);
         }
@@ -76,12 +82,10 @@ public class Player {
             System.out.println("");
             System.out.println(exit.getItemDescription()); //muestro su descripción (me mostrará si requiere de una llave o no)
             if (exit.getOpener() != null) { //si la salida requiere de una llave entonces interactúo
-                in.nextLine();
                 exit.interact();
             }
             in.nextLine();
         } else { //si la salida tiene un intermediario Interactuable
-            this.playerRoom.addItem((Item) i); //agrego el interactuable a la lista de items visibles en la room
             Item it = (Item) i;
             System.out.println("Tiene un/a " + it.getItemName());
             i.interact(); //interactuo con el Interactuable
@@ -195,7 +199,7 @@ public class Player {
     //MOSTRAR ITEMS
     public void showAllRoomItems() {
         System.out.println("Puedes ver... ");
-        for (Item item : juego.getPlayer().getPlayerRoom().getAllItems()) {
+        for (Item item : getPlayerRoom().getAllItems()) {
             System.out.println("    -" + item.getItemDescription());
         }
     }

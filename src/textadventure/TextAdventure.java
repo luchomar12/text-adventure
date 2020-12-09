@@ -9,22 +9,24 @@ public class TextAdventure {
 
     public static void main(String[] args) throws IOException, FileNotFoundException, ParseException {
         Scanner in = new Scanner(System.in);
+        Game juego = Game.dameInstancia();
         String input;
-        Game.init(); //inicializar todas las variables del juego
-        Game.showIntroduction(); //muestra introducción del juego
+        juego.init(); //inicializar todas las variables del juego
+        juego.showIntroduction(); //muestra introducción del juego
 
         while (true) {
-            Game.showRoom(); //descripción de la habitación en la que me encuentro
-            if (Game.getEnd()) {
+            juego.showRoom(); //descripción de la habitación en la que me encuentro
+            if (juego.getEnd()) {
                 break;
             }
-            Game.showMenu(); //muestro el menú de acciones
+            juego.showMenu(); //muestro el menú de acciones
             input = in.nextLine().trim().toLowerCase(); //entrada de acciones
             if (input.equals("q")) {
                 break; //opcion para salir del juego
             }
-            Game.actionMenu(input); //interpreto el input
+            juego.actionMenu(input); //interpreto el input
         }
         System.out.println("¡¡Hasta la próxima!!"); //lo que se muestra cuando salgo del juego
     }
+
 }

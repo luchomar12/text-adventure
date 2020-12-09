@@ -1,14 +1,17 @@
 package Items;
 
-import static textadventure.Game.in;
 import Interfaces.Interactuable;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
-import static textadventure.Game.juego;
+import org.json.simple.JSONObject;
+import textadventure.Game;
 
 public class Interruptor extends Item implements Interactuable {
 
     //ATRIBUTOS
+    private Game juego = Game.dameInstancia();
+    private Scanner in = new Scanner(System.in);
     private Exit unlock; // el Interruptor puede desbloquear una salida
     private Set<Tablero> activate = new HashSet<>();// el Interruptor puede activar uno o mas tableros
     private String unlockedDescription; //lo que aparece cuando activo la el Interruptor
@@ -16,7 +19,15 @@ public class Interruptor extends Item implements Interactuable {
     public Interruptor(int code, String itemName, String itemDescription, String unlockedDescription) {
         super(code, itemName, itemDescription);
         this.unlockedDescription = unlockedDescription;
+    }
 
+    public static Interruptor leerJson(JSONObject obj) {
+        int iCode = (int) (long) obj.get("interruptorCode");
+        String iTitle = (String) obj.get("interruptorName");
+        String iDescription = (String) obj.get("interruptorDescription");
+        String iUnlockedDescription = (String) obj.get("interruptorUnlockedDescription");
+        Interruptor i = new Interruptor(iCode, iTitle, iDescription, iUnlockedDescription);
+        return i;
     }
 
     public Exit getUnlock() {
