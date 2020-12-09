@@ -1,4 +1,16 @@
 {
+	"Textos":[
+		{
+			"introduction":"\nNo recuerdas bien cómo o por que...\nDónde te has perdido o dónde te has caido...\n. . .\nVuelves a oir...vuelves a oler... madera...\nRecuerdas tus manos, tus pies... tu cabeza...\n. . .\nVuelves a ver... pero poca luz... vuelve la nitidez\n. . .\n-¿Por qué desperté?...aquí...\n. . .\n-¿Dónde... estoy?\n. . .\n\n",
+			"final":"¡¡¡Finalmente eres libre!!!\n. . .\n¿ y ahora ?\n. . .\n***¡Gracias por Jugar!***\n. . .\nEsta aventura de texto fue realizada por Luciano Marchese, Emiliano Santana y Verónica López Perea"
+		}
+	]
+    "PlayerStart":[
+    	{
+    		"startRoom":100,
+    		"inventory":[null]
+    	}
+    ],
     "Rooms": [
         {
             "roomCode": 100,
@@ -258,6 +270,7 @@
             "contenedorCode": 9,
             "contenedorName": "Cofre Chico",
             "contenedorDescription": "Un COFRE CHICO de madera, tiene una pequeña cerradura",
+            "contenedorOpenedDescription": "¡Has abierto el cofre!",
             "contenedorOpener":1,
             "contenedorInteractuable":-1,
             "contenedorTreasures":[4,5,8]
@@ -266,6 +279,7 @@
             "contenedorCode": 17,
             "contenedorName": "Caja de Metal",
             "contenedorDescription": "Una CAJA DE METAL, pequeña y rectangular. No tiene cerradura",
+            "contenedorOpenedDescription": "¡Has abierto la caja!",
             "contenedorOpener":-1,
             "contenedorInteractuable":18,
             "contenedorTreasures":[19]
@@ -274,6 +288,7 @@
             "contenedorCode": 39,
             "contenedorName": "Hogar",
             "contenedorDescription": "Un gran HOGAR de piedra",
+            "contenedorOpenedDescription": "¡El Hogar está desboqueado!",
             "contenedorOpener":-1,
             "contenedorInteractuable":38,
             "contenedorTreasures":[25,40]
@@ -282,6 +297,7 @@
             "contenedorCode": 21,
             "contenedorName": "Caja Fuerte",
             "contenedorDescription": "Una CAJA FUERTE con combinación a rosca",
+            "contenedorOpenedDescription": "¡Has abierto la Caja Fuerte!",
             "contenedorOpener":-1,
             "contenedorInteractuable":24,
             "contenedorTreasures":[26]
@@ -290,6 +306,7 @@
             "contenedorCode": 27,
             "contenedorName": "Mochila",
             "contenedorDescription": "Una MOCHILA. El cierre tiene un pequeño candado",
+            "contenedorOpenedDescription": "¡Has abierto la mochila!",
             "contenedorOpener":25,
             "contenedorInteractuable":-1,
             "contenedorTreasures":[28,37]
@@ -344,6 +361,7 @@
             "tableroCode": 13,
             "tableroName": "Tablero Digital",
             "tableroDescription": "El TABLERO DIGITAL ahora parece encendido. Hay que introducir algo",
+            "tableroOffDescription":"Un tablero al lado de la puerta\nNo ocurre nada cuando lo aprieto\nEl led está apagado. Evidentemente no está activado\nDebe haber una manera de activarlo en alguna habitación",
             "tableroIsOn": false,
             "tableroPass":["1","0","8","9"],
             "tableroInfo":"\"La contraseña es numérica. Ingresa la correcta\"",
@@ -353,6 +371,7 @@
             "tableroCode": 18,
             "tableroName": "Display Digital",
             "tableroDescription": "Ahora está activado. Parece que hay que introducir algo en la pantalla",
+            "tableroOffDescription":"Un tablero sobre la caja\nEn la pantalla no ocurre nada cuando la aprieto\nEl led está apagado. Evidentemente no está activado\nDebe haber una manera de activarlo en alguna habitación",
             "tableroIsOn": false,
             "tableroPass":["de", "de", "iz", "ar", "iz", "ab", "ar", "ar"],
             "tableroInfo":"\"La contraseña requiere direcciones (de/iz/ar/ab). Introduce una dirección por vez\"",
@@ -362,6 +381,7 @@
             "tableroCode": 24,
             "tableroName": "Combinación a Rosca",
             "tableroDescription": "La caja fuerte tiene una combinación a rosca",
+            "tableroOffDescription":"",
             "tableroIsOn": true,
             "tableroPass":["iz2", "de3", "iz4", "de1"],
             "tableroInfo":"Debo introducir secuencias de sentido (iz/de) seguido de un número(1-9). Ejemplo: \"iz3\"",
@@ -373,6 +393,7 @@
             "bloqueadorCode": 7,
             "bloqueadorName": "Chapa",
             "bloqueadorDescription": "Una CHAPA bloquea la cerradura de la puerta. Tiene tornillos...",
+            "bloqueadorOpenedDescription": "¡Has desatornillado la chapa!",
             "bloqueadorIsOn":6,
             "bloqueadorOpener":5
         },
@@ -380,6 +401,7 @@
             "bloqueadorCode": 38,
             "bloqueadorName": "Placa de Metal",
             "bloqueadorDescription": "Una PLACA DE METAL obstruye la boca del hogar. Está atornillada",
+            "bloqueadorOpenedDescription": "¡Has desatornillado la placa!",
             "bloqueadorIsOn":39,
             "bloqueadorOpener":5
         }
