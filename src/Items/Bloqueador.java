@@ -10,10 +10,10 @@ import textadventure.Game;
 public class Bloqueador extends Item implements Interactuable {
 
     //ATRIBUTOS
-    private Game juego = Game.dameInstancia();
+    //RESUELTO OK // PROFE: no esta bueno guardar el juego en un atributo. Pidan dameInstancia en cada metodo que lo necesitan
     private Llave opener; //en estos casos sería el destornillador que es de tipo Llave
     private Item isOn;
-    private Scanner in = new Scanner(System.in);
+    //RESUELTO OK //PROFE: para que guardan el Scanner? creenlo cada vez que lo necesiten
     private String openedDescription;
 
     //CONSTRUCTOR
@@ -49,6 +49,8 @@ public class Bloqueador extends Item implements Interactuable {
 
     @Override
     public void interact() {
+        Game juego = Game.dameInstancia();
+        Scanner in = new Scanner(System.in);
         System.out.println(this.itemDescription); //muestro la descripcion del bloqueador
         if (juego.getPlayer().getInventory().isEmpty()) { //si no tengo nada para abrirlo
             System.out.println("");
@@ -80,6 +82,7 @@ public class Bloqueador extends Item implements Interactuable {
      */
     @Override
     public boolean validateInteract(String input) {
+        Game juego = Game.dameInstancia();
         for (Guardable item : juego.getPlayer().getInventory()) { //busco en el inventario
             Item i = (Item) item; //guardo en Item el Storable
             /*

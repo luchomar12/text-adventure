@@ -1,4 +1,3 @@
 package Interfaces;
 
-public interface Guardable {
-}
+public interface Guardable {}

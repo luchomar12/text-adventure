@@ -1,6 +1,5 @@
 package Items;
 
-import textadventure.Game;
 
 public abstract class Item {
 

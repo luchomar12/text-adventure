@@ -1,4 +1,3 @@
 package Interfaces;
 
-public interface Usable {
-}
+public interface Usable {}

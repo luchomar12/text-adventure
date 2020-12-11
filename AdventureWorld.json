@@ -7,7 +7,7 @@
 	]
     "PlayerStart":[
     	{
-    		"startRoom":100,
+    		"startRoom":600,
     		"inventory":[null]
     	}
     ],
@@ -364,7 +364,8 @@
             "tableroOffDescription":"Un tablero al lado de la puerta\nNo ocurre nada cuando lo aprieto\nEl led está apagado. Evidentemente no está activado\nDebe haber una manera de activarlo en alguna habitación",
             "tableroIsOn": false,
             "tableroPass":["1","0","8","9"],
-            "tableroInfo":"\"La contraseña es numérica. Ingresa la correcta\"",
+            "tableroRegex":"^[0-9]$",
+            "tableroInfo":"\"La contraseña es numérica. Ingresa un número por vez\"",
             "tableroIn":12
         },
         {
@@ -374,6 +375,7 @@
             "tableroOffDescription":"Un tablero sobre la caja\nEn la pantalla no ocurre nada cuando la aprieto\nEl led está apagado. Evidentemente no está activado\nDebe haber una manera de activarlo en alguna habitación",
             "tableroIsOn": false,
             "tableroPass":["de", "de", "iz", "ar", "iz", "ab", "ar", "ar"],
+            "tableroRegex":"^(de|iz|a(r|b))$",
             "tableroInfo":"\"La contraseña requiere direcciones (de/iz/ar/ab). Introduce una dirección por vez\"",
             "tableroIn":17
         },
@@ -384,6 +386,7 @@
             "tableroOffDescription":"",
             "tableroIsOn": true,
             "tableroPass":["iz2", "de3", "iz4", "de1"],
+            "tableroRegex":"^(de|iz)[0-9]$",
             "tableroInfo":"Debo introducir secuencias de sentido (iz/de) seguido de un número(1-9). Ejemplo: \"iz3\"",
             "tableroIn":21
         }

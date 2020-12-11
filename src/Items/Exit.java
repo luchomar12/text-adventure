@@ -8,8 +8,6 @@ import textadventure.*;
 public class Exit extends Item implements Interactuable, Abrible {
 
     //ATRIBUTOS
-    private Game juego = Game.dameInstancia();
-    private Scanner in = new Scanner(System.in);
     private String direction; //hacia donde está (n, s, e, w)
     private Room leadsTo; //La room a la que va
     private boolean isOpened; // si está abierta o cerrrada
@@ -80,6 +78,8 @@ public class Exit extends Item implements Interactuable, Abrible {
 
     @Override
     public void interact() {
+        Game juego = Game.dameInstancia();
+        Scanner in = new Scanner(System.in);
         System.out.println("");
         System.out.println("¿Qué vas a usar?");
         System.out.println("");
@@ -98,6 +98,7 @@ public class Exit extends Item implements Interactuable, Abrible {
 
     @Override
     public boolean validateInteract(String input) {
+        Game juego = Game.dameInstancia();
         for (Guardable item : juego.getPlayer().getInventory()) { //busco en el inventario
             Item obj = (Item) item; //guardo en Item el Storable
             if (input.equalsIgnoreCase(obj.getItemName()) && obj instanceof Usable) { //si mi entrada es igual al nombre del item y es unsable
@@ -110,6 +111,7 @@ public class Exit extends Item implements Interactuable, Abrible {
 
     @Override
     public boolean openWith(Usable item) {
+        Game juego = Game.dameInstancia();
         if (item.equals(this.getOpener())) {
             this.isOpened = true; //abro la puerta
             juego.getPlayer().setPlayerRoom(this.leadsTo); //paso a siguiente habitación

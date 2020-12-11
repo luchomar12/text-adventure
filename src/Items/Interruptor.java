@@ -10,8 +10,6 @@ import textadventure.Game;
 public class Interruptor extends Item implements Interactuable {
 
     //ATRIBUTOS
-    private Game juego = Game.dameInstancia();
-    private Scanner in = new Scanner(System.in);
     private Exit unlock; // el Interruptor puede desbloquear una salida
     private Set<Tablero> activate = new HashSet<>();// el Interruptor puede activar uno o mas tableros
     private String unlockedDescription; //lo que aparece cuando activo la el Interruptor
@@ -48,6 +46,7 @@ public class Interruptor extends Item implements Interactuable {
 
     @Override
     public void interact() {
+        Scanner in = new Scanner(System.in);
         System.out.println("");
         System.out.println("¿Mover? (si/no)");
         System.out.println("");
@@ -60,6 +59,7 @@ public class Interruptor extends Item implements Interactuable {
 
     @Override
     public boolean validateInteract(String input) {
+        Game juego = Game.dameInstancia();
         if (input.equalsIgnoreCase("si")) {
             System.out.println(this.unlockedDescription); //muestro lo que sucedió
             if (this.getUnlock() != null) { //si abre una salida
@@ -67,7 +67,7 @@ public class Interruptor extends Item implements Interactuable {
             }
             if (!this.getTableros().isEmpty()) { //si tiene tableros para activar
                 for (Tablero t : this.getTableros()) { //los busco
-                    t.setIsOn(true); //los activo
+                    t.setOn(true); //los activo
                 }
             }
             juego.getPlayer().getPlayerRoom().removeItem(this); //saco el Interruptor de la vista de la Room

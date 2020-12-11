@@ -26,7 +26,7 @@ public class Game {
     //INICIALIZO ATRIBUTOS
     private static Game juego;
     private Player p;
-    private Scanner in = new Scanner(System.in); //atributo input
+    private Scanner in = new Scanner(System.in); // PROFE: aca tiene mas sentido guardar el scanner porque lo usan en muchos lados.
     private Map<Integer, Room> rooms = new HashMap<>(); //Map con todas las Rooms
     private Map<Integer, Item> items = new HashMap<>(); //Map con todos los Items
     private Set<String> menu = new TreeSet<>(); //Conjunto con las opcinones del menú
@@ -35,9 +35,7 @@ public class Game {
     private String finalDescription;
 
     //CONSTRUCTOR
-    public Game() {
-
-    }
+    public Game() {}
 
     public static Game dameInstancia(){
         if(juego == null){

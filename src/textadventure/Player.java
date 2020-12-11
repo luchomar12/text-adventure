@@ -14,8 +14,7 @@ public class Player {
     private Set<Guardable> inventory = new HashSet<>(); // PROFE: hacer un getter mejor de atributos publicos//RESUELTO OK
     private boolean gano = false;
 
-    public Player() {
-    }
+    public Player() {}// PROFE: los metodos vacios escribanlos asi: {} sin enter en el medio//RESUELTO OK
 
     public boolean isGano() {
         return this.gano;
