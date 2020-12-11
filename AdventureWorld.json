@@ -7,7 +7,7 @@
 	]
     "PlayerStart":[
     	{
-    		"startRoom":600,
+    		"startRoom":100,
     		"inventory":[null]
     	}
     ],
